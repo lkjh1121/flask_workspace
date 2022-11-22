@@ -1,0 +1,10 @@
+"""
+서버시작
+
+mysiteactivate 
+cd \flask_workspace\hello 
+flask --app hello --debug run
+"""
+
+
+insert into board(title, writer, contents) 

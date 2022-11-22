@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post" name="myform">
+        아이디 : <input type="text" name="userid" id="userid"><br/>
+        패스워드 : <input type="password" name="password" id="password"><br/>
+
+        <input type="button" id="btnSend" value="로그온">
+        <!--<button type="button" id="btnSend">로그온</button>-->
+
+    </form>
+</body>
+</html>
+<script>
+    window.onload=function(){
+        var btnSend = document.getElementById("btnSend");
+        btnSend.addEventListener("click", ()=>{
+
+            var frm = document.myform;
+            //trim 문자열 양쪽에 있는 공백을 없앤다. 
+            //__test__
+            if( frm.userid.value.trim()=="")
+            {
+                alert("아이디를 입력하세요");
+                frm.userid.focus(); //커서를 이곳으로 이동
+                return false;   
+            }
+            if( frm.password.value.trim()=="")
+            {
+                alert("패스워드를 입력하세요");
+                frm.password.focus(); //커서를 이곳으로 이동
+                return false;   
+            }
+
+            frm.action="/logon";
+            frm.submit(); //서버로 전송하기 
+        })  
+    }
+</script>
+

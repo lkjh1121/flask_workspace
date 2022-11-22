@@ -1,0 +1,3 @@
+graft hello/static
+graft hello/templates
+global-exclude *.pyc

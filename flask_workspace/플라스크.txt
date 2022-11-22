@@ -1,0 +1,1949 @@
+플라스크 튜토리얼 
+http://flask.pocoo.org/docs/1.0/tutorial/install/
+
+파이썬과  mysql 
+
+
+1. pymysql 설치하기 
+https://github.com/PyMySQL/PyMySQL
+pip install pymysql
+
+
+maridb 실행방법 
+
+c:\maridb에 압축을 푼다 
+
+sc delete mysql
+
+cmd 창을 관리자권한으로 실행시킨다. 
+cd /mariadb/bin
+mysql_install_db –-datadir=C:\mariadb\data –-service=mariaDBZip –-port=5306 -–password=1234
+
+디비연결하기 
+mysql -u root -p --port=5306
+Enter your password :1234
+
+디비 생성 
+CREATE DATABASE mydb default CHARACTER SET UTF8; 
+
+계정만들기 
+create user user01 identified by '1234';
+
+GRANT ALL PRIVILEGES ON mydb.* TO user01@localhost IDENTIFIED BY '1234'; 
+EXIT; 
+
+create user 'userid'@'%' identified by '1234';
+GRANT ALL privileges ON mydb.* TO user01@'%' IDENTIFIED BY '1234';
+
+
+
+새로운 계정으로 시작하기 
+mysql -u user01 -p
+use mydb
+
+
+CREATE TABLE user (
+	id INT NOT NULL AUTO_INCREMENT,
+	username VARCHAR(50) NULL,
+	password VARCHAR(100) NULL,
+	PRIMARY KEY (id),
+	UNIQUE INDEX username (username)
+);
+
+CREATE TABLE post (
+	id INT NOT NULL AUTO_INCREMENT,
+	author_id INT NOT NULL,
+	created TIMESTAMP,
+	title TEXT NOT NULL ,
+	body TEXT NOT NULL ,
+	PRIMARY KEY (id)
+);
+
+/*
+1. 테이블 살펴보기
+먼저, mysql에 들어가서 다음 방법을 이용해 접근 상태를 확인합니다.
+mysql> use mysql;
+mysql> select host, user, password from user;
+출력된 정보를 확인해보면, localhost나 127.0.0.1만 등록이 되어있는 것을 확인 할 수 있는데, 외부에서 접근이 되게 하려면, 따로 등록을 해줘야 합니다.
+
+2. 권한 설정 하기
+설정을 할 때, 특정 IP나 특정 IP대역만 허용을 하거나, 전체를 허용되게 하는 방법이 있습니다.
+1) 특정 IP 접근 허용 설정
+mysql> grant all privileges on *.* to ‘root’@‘192.168.56.101’ identified by ‘root의 패스워드’;
+2) 특정 IP 대역 접근 허용 설정
+mysql> grant all privileges on *.* to ‘root’@‘192.168.%’ identified by ‘root의 패스워드’;
+3) 모든 IP의 접근 허용 설정
+mysql> grant all privileges on *.* to ‘root’@‘%’ identified by ‘root의 패스워드’
+
+3. 등룩확인 후 적용시키기
+등록이 끝났으면, 계정에 설정한 IP혹은 %가 등록 되어있는지 확인을합니다.
+mysql> select host, user, password from user;
+mysql> flush privileges;
+
+4. my.cnf에서 외부 접속 관련 내용 변경하기
+my.cnf 설정파일에서 bind-address라는 부분을 주석처리 해줍니다.
+vi /etc/my.cnf
+# bind-address = 127.0.0.1
+
+5. mysql 재시작
+주석처리가 끝났으면, mysql을 재시작 해줍니다.
+/etc/init.d/mysqld restart
+*/
+
+
+ALTER DATABASE mydb DEFAULT CHARACTER SET utf8;
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+
+
+테이블생성
+CREATE TABLE guestbook (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	title VARCHAR(300) NULL DEFAULT NULL,
+	contents LONGTEXT NULL DEFAULT NULL,
+	writer VARCHAR(50) NULL DEFAULT NULL,
+	wdate DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (id)
+);
+
+insert into guestbook(title, contents, writer, wdate) values
+('제목1', '내용1', '홍길동1', now());
+insert into guestbook(title, contents, writer, wdate) values
+('제목2', '내용2', '홍길동2', now());
+insert into guestbook(title, contents, writer, wdate) values
+('제목3', '내용3', '홍길동3', now());
+insert into guestbook(title, contents, writer, wdate) values
+('제목4', '내용4', '홍길동4', now());
+insert into guestbook(title, contents, writer, wdate) values
+('제목5', '내용5', '홍길동5', now());
+
+
+select * from guestbook;
+
+import pymysql
+
+#접속객체를 가져온다. 
+conn = pymysql.connect( host = 'localhost',  #서버아이피
+                         user = 'user01',    #계정아이디
+                         password = '1234' , #패스워드
+                         db = 'mydb',        #db명
+                         port=5306)          #디비포트번호 
+curs = conn.cursor()
+
+sql = "SELECT * FROM guestbook " # 실행 할 쿼리문 입력
+curs.execute(sql) # 쿼리문 실행 - 실행후 fetch하기 
+
+rows = curs.fetchall() # 데이터 패치- tuple타입으로 온다 
+
+for row in rows :
+     print(type(row), row)
+
+print("한개만 가져오기------")
+curs.execute(sql)
+row = curs.fetchone() #첫번째 레코드 하나만 가져온다 
+print(row)
+
+print("세개만 가져오기------")
+curs.execute(sql)
+rows = curs.fetchmany(3) #새개의 레코드를 가져온다 
+for row in rows :
+     print(type(row), row)
+
+
+
+#Dict 타입으로 가져오기 
+curs = conn.cursor(pymysql.cursors.DictCursor)
+
+sql = "SELECT * FROM guestbook" # 실행 할 쿼리문 입력
+curs.execute(sql) # 쿼리문 실행
+rows = curs.fetchall() # 데이터 패치
+for row in rows :
+     print(row['title'], row['contents'], row['wdate'])
+
+conn.close()
+
+
+
+
+
+mysql연동3.py
+import pymysql
+
+conn = pymysql.connect(host = 'localhost', user = 'user01', password = '1234' ,db = 'mydb', port=5306)
+
+
+curs = conn.cursor()
+
+# ==== insert example ====
+sql = """
+        insert into guestbook(title, contents, writer, wdate)
+        values (%s, %s, %s, now())
+    """
+curs.execute(sql, ('제목입니다.', '내용입니다.', '작성자'))
+curs.execute(sql, ('제목입니다.', '내용입니다.', '작성자'))
+conn.commit(); #안하면 막 사라짐
+
+# ==== update OR delete example ====
+sql = """update guestbook
+         set title = '제목을 수정합니다.'
+         where id=1
+     """
+curs.execute(sql)
+
+sql = "delete from guestbook where id=%s"
+curs.execute(sql, 6)
+
+
+sql = "SELECT * FROM guestbook" # 실행 할 쿼리문 입력
+curs.execute(sql) # 쿼리문 실행
+
+rows = curs.fetchall() # 데이터 패치
+
+for i in rows :
+     print(i)
+
+conn.close()
+
+
+파일명 : mysql연동2.py
+import pymysql
+
+conn = pymysql.connect(host = 'localhost', 
+                        user = 'user01', 
+                        password = '1234' ,
+                        db = 'mydb', 
+                        port=5306)
+
+curs = conn.cursor(pymysql.cursors.DictCursor)
+
+def insert():
+    title = input("제목 : ")
+    writer =input("작성자 : ")
+    contents = input("내용 : ")
+    # ==== insert example ====
+    sql = """
+            insert into guestbook(title, contents, writer, wdate)
+            values (%s, %s, %s, now())
+        """
+    curs.execute(sql, (title, writer, contents))
+    conn.commit() #반드시 해야 한다 
+
+def update():
+    id = input("수정할 아이디는?")
+    title = input("수정할 제목 : ")
+    writer =input("수정할 작성자 : ")
+    contents = input("수정할 내용 : ")
+    
+    # ==== update OR delete example ====
+    sql = """update guestbook
+            set title = %s, contents=%s, writer=%s
+            where id=%s
+        """
+    curs.execute(sql, (title, contents, writer, id))
+    conn.commit() 
+
+def delete():
+    id= input("삭제할 아이디는 ")
+
+    sql = "delete from guestbook where id=%s"
+    curs.execute(sql, id)
+
+def output():   
+    sql = "SELECT * FROM guestbook" # 실행 할 쿼리문 입력
+    curs.execute(sql) # 쿼리문 실행
+
+    rows = curs.fetchall() # 데이터 패치
+
+    for row in rows :
+        print(row['id'], row['title'], row['writer'], row['contents'], row['wdate'])
+
+def end():
+    conn.close()
+
+
+while(True):
+    sel = input("1.목록 2.추가 3.수정 4.삭제 0.종료 : ")
+    if sel=="1" :
+        output()
+    elif sel=="2":
+        insert()
+    elif sel =="3":
+        update()
+    elif sel == "4":
+        delete()
+    elif sel=="0":
+        break
+
+
+몽고디비사용법
+몽고디비 다운로드및 설치 
+https://www.mongodb.com/download-center?jmp=nav#community
+
+
+사용방법 
+환경변수 path 에 다음 경로 추가하기 
+C:\Program Files\MongoDB\Server\4.0\bin
+
+몽고디비 서버 작동하기 
+mongod
+
+데이터 들어갈 경로 없다고 함 
+경로 만들기  c:/data/db
+
+데이터베이스 
+c:/data/db
+
+몽고디비 서버 작동하기 
+mongod
+
+서버와 통신하기 
+mongo 
+
+명령어 
+>db
+test
+
+디비를 모두 보여줘라 
+>show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+
+디비 사용 명령어 - 없으면 알아서 만들어준다  
+>use mydb 
+
+디비 삭제 명령어 
+>db.dropDatabase()
+
+MongoDB에서는 table도 record도 없다.
+대신 비슷한 개념으로 각각 collection과 document가 존재한다.
+RDBMS로 따지면 table과 record와 비슷한개념이다.
+
+> show collections
+> db.createCollection('person')
+{ "ok" : 1 }
+> show collections
+person
+>
+
+데이터 추가하기 형식
+db.<컬렉션명>.insert(<json>)
+
+db.person.insert({'name':'홍길동', 'age':26, 'gender':'m'})
+db.person.insert({'name':'장길산', 'age':62, 'gender':'m'})
+db.person.insert({'name':'임꺽정', 'age':28, 'gender':'m'})
+db.person.find()
+
+
+db.createCollection("member");  
+
+db.member.insert({'member_id':'test1', 'password':'1234', 'username':'홍길동', 'phone':'010-0000-0000'});
+db.member.insert({'member_id':'test2', 'password':'1234', 'username':'김길동', 'phone':'010-1111-1111'});
+db.member.insert({'member_id':'test3', 'password':'1234', 'username':'이길동', 'phone':'010-2222-2222'});
+db.member.insert({'member_id':'test4', 'password':'1234', 'username':'장길동', 'phone':'010-3333-3333'});
+db.member.insert({'member_id':'test5', 'password':'1234', 'username':'고길동', 'phone':'010-4444-4444'});
+                                                                                                                                        
+db.member.find();
+
+
+데이터 검색하기 
+1.모든 데이터 출력 
+db.<컬렉션명>.find()
+db.person.find()
+
+2.조건 출력 
+db.<컬렉션명>.find(<json>)
+
+db.person.find({'name':'홍길동'})
+find내에 조건을 넣지 않는다면 현제 컬렉션 내의 모든 데이터를 보여준다.
+
+만약 조건을 건다면 해당 조건에 일치하는 데이터만 보여준다.
+
+만약 해당조건에 RDBMS처럼 LIKE(부분일치)로 데이터를 보고싶다면 정규표현식을 조건으로 사용하면된다.
+이때 사용되는 것이 $regex이다.(정규식) 
+
+데이터수정하기 
+db.<컬렉션명>.update(<json1>,<json2>)
+
+db.person.update({'name':'홍길동'}, {$set:{'age':40}})
+db.person.find()
+
+
+데이터 삭제하기 
+db.<컬렉션명>.remove(<json>)
+
+db.person.remove({'name':'홍길동'})
+db.person.find()
+
+
+조건 부여하기 
+$eq	(equals) 주어진 값과 일치하는 값
+$gt	(greater than) 주어진 값보다 큰 값
+$gte	(greather than or equals) 주어진 값보다 크거나 같은 값
+$lt	(less than) 주어진 값보다 작은 값
+$lte	(less than or equals) 주어진 값보다 작거나 같은 값
+$ne	(not equal) 주어진 값과 일치하지 않는 값
+$in	주어진 배열 안에 속하는 값
+$nin	주어빈 배열 안에 속하지 않는 값
+
+db.person.find({age:{$gte:40, $lt:60}})
+db.person.find({age:{$gte:40}})
+db.person.find({name:{$in:["장", "임"]}})
+
+
+몽고디비 사용툴 
+https://studio3t.com/download-now/
+
+몽고디비 튜토리얼
+https://docs.mongodb.com/manual/crud/#update-operations
+
+https://www.baeldung.com/spring-data-mongodb-tutorial
+
+
+use mydb
+컬렉션을 계속 만들면 지워지고 새로 만들어진다. 별도로 삭제하지 않는다. 데이터만 전부 삭제시 
+db.guestbook.remove({}) 
+괄호안에 {} 를 주어서 조건이 특별히 지정되지 않았음을 알려야 한다 
+
+db.createCollection("guestbook");
+db.guestbook.remove({});
+db.guestbook.insert({'id':1, 'title':'제목1', 'contents':'내용1', 'writer':'홍길동', 'wdate':'2019-03-15'}); 
+db.guestbook.insert({'id':2, 'title':'제목2', 'contents':'내용2', 'writer':'임꺽정', 'wdate':'2019-03-16'}); 
+db.guestbook.insert({'id':3, 'title':'제목3', 'contents':'내용3', 'writer':'장길산', 'wdate':'2019-03-17'}); 
+db.guestbook.insert({'id':4, 'title':'제목4', 'contents':'내용4', 'writer':'홍경래', 'wdate':'2019-03-18'}); 
+db.guestbook.insert({'id':5, 'title':'제목5', 'contents':'내용5', 'writer':'장승업', 'wdate':new Date()}); 
+db.guestbook.find();
+
+데이터 전부보기 
+db.guestbook.find();
+
+db.guestbook.insert({'id':'7', 'title':'제목5', 'contents':'내용7', 'writer':'장승업', 'wdate':new Date()}); 
+
+
+로컬이 아닌 외부에서 mongodb에 접속하려면 계정을 만들어야 한다 
+use admin
+db.createUser({user:'test', pwd:'1234', 
+                 roles: [ "userAdminAnyDatabase",
+                   "dbAdminAnyDatabase",
+                   "readWriteAnyDatabase"]});
+
+use mydb
+db.createUser({ user: "test",
+          pwd: "1234",
+          roles: ["dbAdmin", "readWrite"]
+})
+
+
+db.createCollection('hero');
+db.hero.remove({});
+db.hero.insert({'id':1, name:'이순신1', description:'임진왜란 격퇴1'});
+db.hero.insert({'id':2, name:'이순신2', description:'임진왜란 격퇴2'});
+db.hero.insert({'id':3, name:'이순신3', description:'임진왜란 격퇴3'});
+db.hero.insert({'id':4, name:'이순신4', description:'임진왜란 격퇴4'});
+db.hero.insert({'id':5, name:'이순신5', description:'임진왜란 격퇴5'});
+db.hero.insert({'id':6, name:'이순신6', description:'임진왜란 격퇴6'});
+db.hero.insert({'id':7, name:'이순신7', description:'임진왜란 격퇴7'});
+db.hero.insert({'id':8, name:'이순신8', description:'임진왜란 격퇴8'});
+db.hero.insert({'id':9, name:'이순신9', description:'임진왜란 격퇴9'});
+db.hero.insert({'id':10, name:'이순신10', description:'임진왜란 격퇴10'});
+db.hero.find();
+
+자동 시퀀스 만들기 AutoSequence
+별도로 시퀀스가 없다. 그래서 마치 시퀀스 처럼 별도의 디비를 만들어서 해야 한다 
+customSequences 컬렉션을 만든다. 이 컬렉션에는 _id  필드와 seq 가 있다 .
+
+db.createCollection('customSequences')
+
+hero 컬렉션이 사용할 시퀀스를 만들자 
+db.customSequences.insert({_id: "guestbook",  seq: 0 }) 
+db.customSequences.findAndModify( {  query: { _id:"guestbook"},  update: {$inc: { seq:1}},  new: true })
+
+
+
+프로시저를 만들자 
+db.system.js.save( 
+{ 
+   "_id" : "getNextSequence", 
+   "value" : function(name) { 
+        var ret = db.customSequences.findAndModify(
+				{
+							 query: { _id:name},
+							 update: {$inc: { seq:1}},
+							 new: true
+				}
+
+		);
+		return ret.seq;
+	}
+});
+
+db.loadServerScripts()
+getNextSequence("hero");
+
+db.hero.remove({});
+db.hero.insert({id:getNextSequence("hero"), name:'이순신1', description:'임진왜란 격퇴1'});
+db.hero.insert({id:getNextSequence("hero"), name:'이순신2', description:'임진왜란 격퇴2'});
+db.hero.insert({id:getNextSequence("hero"), name:'이순신3', description:'임진왜란 격퇴3'});
+db.hero.insert({id:getNextSequence("hero"), name:'이순신4', description:'임진왜란 격퇴4'});
+db.hero.insert({id:getNextSequence("hero"), name:'이순신5', description:'임진왜란 격퇴5'});
+db.hero.insert({id:getNextSequence("hero"), name:'이순신6', description:'임진왜란 격퇴6'});
+db.hero.find()
+
+이번엔 guestbook 시퀀스를 추가해보자 
+db.customSequences.insert({_id: "guestbook",  seq: 0 }) 
+
+db.guestbook.remove({});
+db.guestbook.insert({'id':getNextSequence("guestbook"), 'title':'제목1', 'contents':'내용1', 'writer':'홍길동', 'wdate':'2019-03-15'}); 
+db.guestbook.insert({'id':getNextSequence("guestbook"), 'title':'제목2', 'contents':'내용2', 'writer':'임꺽정', 'wdate':'2019-03-16'}); 
+db.guestbook.insert({'id':getNextSequence("guestbook"), 'title':'제목3', 'contents':'내용3', 'writer':'장길산', 'wdate':'2019-03-17'}); 
+db.guestbook.insert({'id':getNextSequence("guestbook"), 'title':'제목4', 'contents':'내용4', 'writer':'홍경래', 'wdate':'2019-03-18'}); 
+db.guestbook.insert({'id':getNextSequence("guestbook"), 'title':'제목5', 'contents':'내용5', 'writer':'장승업', 'wdate':new Date()}); 
+db.guestbook.find();
+
+
+
+
+몽고디비 연동하기 
+
+1. pymongo를 설치하자 
+https://www.fun-coding.org/mongodb_basic5.html
+pip install pymongo 
+
+2.계정을 만들자 
+use admin
+db.createUser({user:'test', pwd:'1234', 
+                 roles: [ "userAdminAnyDatabase",
+                   "dbAdminAnyDatabase",
+                   "readWriteAnyDatabase"]});
+
+use mydb
+db.createUser({ user: "test",
+          pwd: "1234",
+          roles: ["dbAdmin", "readWrite"]
+})
+
+3.데이터 불러오기 
+import pymongo
+from pymongo import MongoClient 
+
+# db 연동- 목록 가져오기 
+파일명 : mongodb연동.py
+from pymongo import MongoClient
+client = MongoClient("mongodb://test:1234@127.0.0.1:27017/")
+db = client.mydb 
+rows = db.person.find()
+for row in rows :
+    #print(row)
+    print(row['_id'], row['name'], row['gender'])
+
+
+파일명:mongodb연동2.py
+import pymongo
+from pymongo import MongoClient 
+
+# db 연동- 목록 가져오기 
+from pymongo import MongoClient
+conn = MongoClient("mongodb://test:1234@127.0.0.1:27017/")
+db = conn.mydb  # 새로운 db 생성
+rows = db.person.find()
+for row in rows :
+    print(row)
+    
+
+ 
+# collection 생성
+guestbook = db.guestbook # 새로운 컬랙션 생성하기 
+
+#document 생성 : {'key':'value'}
+
+guestbook.insert({'id':1, 'title':'제목1', 'contents':'내용1', 'writer':'홍길동', 'wdate':'2019-03-15', 'age':23}); 
+guestbook.insert({'id':2, 'title':'제목2', 'contents':'내용2', 'writer':'임꺽정', 'wdate':'2019-03-16', 'age':33}); 
+guestbook.insert({'id':3, 'title':'제목3', 'contents':'내용3', 'writer':'장길산', 'wdate':'2019-03-17', 'age':42}); 
+guestbook.insert({'id':4, 'title':'제목4', 'contents':'내용4', 'writer':'홍경래', 'wdate':'2019-03-18', 'age':53}); 
+guestbook.insert({'id':5, 'title':'제목5', 'contents':'내용5', 'writer':'장승업', 'wdate':'2019-04-12', 'age':34}); 
+
+rows = db.guestbook.find()
+for row in rows :
+    print(row)
+
+
+#문서 삭제 : db.collection.remove() -> collect.remove()
+guestbook.remove({'id' : '1'})
+#전체삭제 : guestbook.remove({})
+
+#문서 수정 : db.collection.update()
+guestbook.update( {'id':2}, {'$set':{'title':'제목을 수정합니다'}}, True)
+#조건, 수정할거, 똑같은거 모두 수정할건지 true/false
+
+# 전체 문서 조회
+rows = db.guestbook.find()
+for row in rows :
+    print(row)
+    
+    
+# 조건 검색
+print('조건 검색')
+result2 = guestbook.find({ 'age':{'$gte':30} }) #크거나 같다
+for r in result2 :
+    print(r)
+
+#컬렉션 제거
+guestbook.drop()
+
+
+몽고디비연동3(AutoIncrement 구현)
+파일명 : mongodb연동3.py
+import pymongo
+from pymongo import MongoClient 
+from pymongo.collection import ReturnDocument
+
+# db 연동- 목록 가져오기 
+from pymongo import MongoClient
+conn = MongoClient("mongodb://test:1234@127.0.0.1:27017/")
+db = conn.mydb 
+
+# collection 생성
+guestbook = db.guestbook # 새로운 컬랙션 생성하기 
+'''
+db.customSequences.insert({"_id": "guestbook",  seq:0})
+db.customSequences.findAndModify({'query': { '_id':'guestbook'}, update: {'$inc':{seq:1}}, 'new': true	})
+'''
+
+def get_sequence(name):
+   
+    document = db.customSequences.find_one_and_update({"_id":"guestbook"}, 
+              {"$inc": {"seq":1}}, return_document=True)
+    #print(document.get('sec'))
+    return document['seq']
+
+id = str(get_sequence('guestbook'))
+guestbook.insert_one({'id':id, 'title':'제목'+id, 'contents':'내용'+id, 'writer':'홍길동'+id, 'wdate':'2019-03-15', 'age':23}); 
+
+rows = db.guestbook.find()
+for row in rows :
+    print(row)
+
+
+
+파일명:myweb1.py
+from wsgiref.simple_server import make_server
+
+def application(environ, start_response):
+    response_body="Hello Python Web"
+    status = '200 OK'
+
+    response_headers= [('Content-Type', 'text/plain'),
+                       ('Content-Length', str(len(response_body)) )]
+    start_response(status, response_headers)
+    return [response_body.encode('utf-8')]
+
+httpd = make_server('localhost', 5000, application)
+print('server start : http://127.0.0.1:5000')
+httpd.handle_request()
+
+
+확인 : http://127.0.0.1:5000
+
+
+파일명 : myweb2.py
+from wsgiref.simple_server import make_server
+
+def application(environ, start_response):
+    response_body=['%s:%s' % (key, value) for key, value in sorted(environ.items())]
+
+    response_body='\n'.join(response_body)
+    status = '200 OK'
+
+    response_headers= [('Content-Type', 'text/plain'),
+                         ('Content-Length', str(len(response_body)))]
+    start_response(status, response_headers)
+
+    return [response_body.encode('utf-8')]
+
+httpd = make_server('localhost', 5000, application)
+httpd.handle_request()
+
+
+플라스크 :  마이크로 프레임워크 - 파이썬 웹 프로그래밍 중에서 가장 핵심적 요소만 포함 
+         딱히 가이드라인이 없어서 자유롭게 만들 수 있다는게 매력
+DJango : 거의 모든 구조가 완성되어 있음 
+         웹투파이, 터보기어 같은 프레임워크도 있음 
+
+플라스크포트번호 변경실행 
+flask run --host=0.0.0.0 --port=9000
+
+1.플라스크 설치 
+pip install flask;
+
+기본 폴더 구조 f
+  app_name
+	    ㄴ app_name 
+					ㄴ static - css, javascript, image 등이 오는 폴더 
+					ㄴ templates - html 
+					ㄴ __init__.py  
+
+
+2. 첫번째 flask 파일 만들기 
+							
+파일명 : hello.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	return "Hello, Python!!"
+	
+if __name__ == "__main__":
+	app.run()
+
+"""
+포트번호 수정하기 
+if __name__ == "__main__":
+	app.run('0.0.0.0', port=8000)
+"""
+
+특별히 지정하지 않으면 포트번호는 5000 이다 
+실행 : python hello.py 
+확인 : http://127.0.0.1:5000/
+
+
+포트번호 수정하기 
+파일명 : server1.py 
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	return "Hello, Python!!"
+	
+if __name__ == "__main__":
+	app.run('0.0.0.0', port=8000)
+
+
+3. 라우터 사용법 
+파일명 : server2.py 
+from flask import Flask
+app = Flask(__name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return "<H1>Welcome flask</H1>"
+
+@app.route("/hello")
+def hello():
+	return "<span style='color:#00ff00;font-size:20pt'>Hello, Python!!</span>"
+	
+
+@app.route("/hello2")
+def hello2():
+    temp = "Python은 배우기 쉬운언어입니다.<br/>"
+    temp = temp + "아주 재미있습니다<br/>"
+    return temp
+
+
+@app.route("/user/<username>")
+def userinfo(username):
+    temp = username + "님 환영합니다"
+    return temp
+
+@app.route("/page/<page>/key/<key>")
+def pageinfo(page, key):
+    temp = page + " " + key 
+    return temp
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+redirect, url_for 함수 
+
+파일명 : server3.py
+from flask import Flask, redirect, url_for
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+   return 'Welcome My Home'
+
+@app.route('/admin')
+def hello_admin():
+    return 'Hello Admin'
+
+@app.route('/guest/<guest>')
+def hello_guest(guest):
+   return 'Hello %s as Guest' % guest
+
+@app.route('/user/<name>')
+def hello_user(name):
+   if name =='admin':
+      app.logger.debug(url_for('hello_admin'))
+      return redirect(url_for('hello_admin'))
+   else:
+      app.logger.debug(url_for('hello_guest', guest = name))
+      return redirect(url_for('hello_guest', guest = name))
+
+if __name__ == '__main__':
+   app.run(debug = True)
+
+
+수정된내용 
+from flask import Flask, redirect, url_for
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+   return 'Welcome My Home'
+
+@app.route('/admin')
+def hello_admin():
+    return 'Hello Admin'
+
+@app.route('/guest/<guest>/id/<id>')
+def hello_guest(guest, id):
+   return 'Hello %s %s as Guest' % (guest, id)
+
+@app.route('/user/<name>')
+def hello_user(name):
+   if name =='admin':
+      app.logger.debug(url_for('hello_admin'))
+      return redirect(url_for('hello_admin'))
+   else:
+      app.logger.debug(url_for('hello_guest', guest = name, id=1))
+      return redirect(url_for('hello_guest', guest = name, id=1))
+
+if __name__ == '__main__':
+   app.run(debug = True)
+
+
+파일명:server4.py -- 로그
+from flask import Flask
+app = Flask(__name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return "<H1>Welcome flask</H1>"
+
+@app.route('/user/<username>') 
+def showUserProfile(username):
+	#로그 추가하기 
+    app.logger.debug('RETRIEVE DATA - USER ID : %s' % username)
+    app.logger.debug('RETRIEVE DATA - Check Compelete')
+    app.logger.warn('RETRIEVE DATA - Warning... User Not Found.')
+    app.logger.error('RETRIEVE DATA - ERR! User unauthenification.')
+    return 'USER : %s' % username
+
+#반드시 숫자만 
+@app.route('/user/id/<int:userId>') 
+def showUserProfileById(userId): 
+    return 'USER ID : %d' % userId
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+get, post 방식 처리 
+파일명 : server4_1.py
+from flask import Flask
+from flask import request
+
+app = Flask(__name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return "<H1>Welcome flask</H1>"
+
+#파라미터 처리 http://localhost:5000/login?userid=test&password=1234
+#동일한 url이나 전송방식에 따라서 다르게 호출된다. get 전송
+@app.route("/login", methods=['GET']) 
+def login_get():
+    userid = request.values['userid']
+    password = request.values['password']
+     
+    return "get 전송 : userid %s password %s " % (userid, password)
+
+#postman 에서 전송방식 post 파라미터는 body x-www-form-urlencoded 에 키 값 추가
+#동일한 url이나 전송방식에 따라서 다르게 호출된다. post 전송
+@app.route("/login", methods=['POST']) 
+def login_post():
+    userid = request.form['userid']
+    password = request.form['password']
+     
+    return "post 전송 : userid %s password %s " % (userid, password)
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+
+
+Flask 로그인 및 세션 생성
+127.0.0.1:5000/account/login
+
+파일명:server5.py - post 처리하기, session
+from flask import Flask
+from flask import request
+from flask import session
+
+app = Flask(__name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return "<H1>Welcome flask</H1>"
+
+@app.route('/user/<username>') 
+def showUserProfile(username):
+	#로그 추가하기 
+    app.logger.debug('RETRIEVE DATA - USER ID : %s' % username)
+    app.logger.debug('RETRIEVE DATA - Check Compelete')
+    app.logger.warn('RETRIEVE DATA - Warning... User Not Found.')
+    app.logger.error('RETRIEVE DATA - ERR! User unauthenification.')
+    return 'USER : %s' % username
+
+@app.route('/user/id/<int:userId>') 
+def showUserProfileById(userId): 
+    return 'USER ID : %d' % userId
+
+#파라미터 처리하기 
+
+@app.route('/account/login', methods=['POST']) 
+def login(): 
+    app.logger.debug("************************")
+    if request.method == 'POST': 
+        userId = request.form['id']
+        wp = request.form['wp']
+        app.logger.debug("userId : ", userId )
+        app.logger.debug("wp : ", wp )
+        
+        if len(userId) == 0 or len(wp) == 0:
+            return userId+', '+wp+' 로그인 정보를 제대로 입력하지 않았습니다.' 
+      
+        session['logFlag'] = True
+        session['userId'] = userId
+        return session['userId'] + ' 님 환영합니다.' 
+        #return userId + " " + wp
+    else: 
+        return '잘못된 접근입니다.' 
+      
+
+@app.route('/user', methods=['GET'])
+def getUser():
+    if session.get('logFlag') != True:
+        return '잘못된 접근입니다.'
+    userId = session['userId']
+    return '[GET][USER] USER ID : {0}'.format(userId)
+
+
+@app.route('/account/logout', methods=['POST','GET'])
+def logout():
+    session['logFlag'] = False
+    session.pop('userId', None)
+    return redirect(url_for('main'))
+
+
+@app.errorhandler(404)
+def not_found(error):
+    resp = make_response(render_template('error.html'), 404)
+    resp.headers['X-Something'] = 'A value' 
+    return resp
+
+@app.route('/login', methods=['POST','GET'])
+def login_direct():
+    if request.method == 'POST':
+        return redirect(url_for('login'), code=307) 
+    else:
+        return redirect(url_for('login'))
+
+if __name__ == "__main__":
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+파일 랜더링, get, post방식 파라미터처리하기 
+1.templates 폴더를 만든다. 
+write.html 파일을 추가한다 
+
+flask_workspace
+	ㄴtemplates
+		ㄴ write.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form name="myform" action="/save">
+        userid : <input type="text" name="userid" ><br>
+        password : <input type="password" name="password"><br>
+
+        <button type="button" onclick="goSend1()">get방식 전송</button> <br>
+        <button type="button" onclick="goSend2()">post방식 전송</button>
+        
+    </form>
+
+    <script>
+    function goSend1()
+    {
+        var frm=document.myform;
+        frm.method="get";
+        frm.action="/board/save";
+        frm.submit();
+    }
+
+    function goSend2()
+    {
+        var frm=document.myform;
+        frm.method="post";
+        frm.action="/board/save";
+        frm.submit();
+    }
+
+    </script>
+</body>
+</html>
+
+
+2. server6.py
+from flask import Flask
+from flask import request
+from flask import session
+from flask import render_template;
+
+app = Flask(__name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return "<H1>Welcome flask</H1>"
+
+@app.route("/board/write")
+def board_write():
+    return render_template("write.html")
+
+#get방식 
+@app.route("/board/save", methods=['GET'])
+def board1():
+    result = "get방식 : {0} {1}".format( request.values['userid'], request.values['password'] );
+    app.logger.debug(request.values['userid'])
+    return result;
+
+#post방식
+@app.route("/board/save",  methods=['post'])
+def board2():
+    result = "post 방식 : {0} {1}".format( request.form['userid'], request.form['password'] );
+    return result;
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+
+정적파일과 템플릿
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    {{mystr}}<br>
+    {{mylist[1:3]}}<br>
+
+    {%for n in mylist%}
+        {{n}}
+    {%endfor%}
+</body>
+</html>
+
+
+server7.py
+from flask import Flask
+from flask import request
+from flask import session
+from flask import render_template;
+
+app = Flask(__name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return render_template("index.html", title="flask 템플릿", 
+               mystr="문장을 보내봅시다", 
+               mylist = [x for x in range(1,11)] )
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+파일업로드
+/templates/upload.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form enctype="multipart/form-data" method="post" action="/file/save">
+        <input type="file" name="upload" /><br>
+        <input type="submit" value="전송하기">
+    </form>
+</body>
+</html>
+
+uploadServer.py
+from flask import Flask
+from flask import request
+from flask import session
+from flask import render_template;
+import os
+from flask import  redirect
+from flask import  url_for
+from werkzeug.utils import secure_filename
+from flask import send_from_directory
+
+
+UPLOAD_FOLDER = '/flask_workspace/uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+#업로드 용량 제한
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+#파일 업로드 html 랜더링
+@app.route("/")
+def index():
+    return render_template("upload.html")
+
+#파일 확장자 사용 가능 여부 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+#파일 전송하기 
+@app.route("/file/save",  methods=['post'])
+def file_upload():
+    file = request.files['upload']
+    
+    if file.filename == '':
+        flash('No selected file')
+        return "file 을 선택하지 않았습니다"
+    
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        sfilename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(sfilename)
+        return filename+" 업로드 성공"
+        
+@app.route('/download/<filename>')
+def download(filename):
+    uploads = os.path.join(app.config['UPLOAD_FOLDER'])
+    app.logger.debug(filename)
+    return send_from_directory(directory=uploads, filename=filename)
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+#자바스크립트,css, image 연동하기 
+static 폴더 만들고 그 안에 소스를 둔다. 
+hello.js
+
+function sayHello()
+{
+    alert("Hello");
+}
+
+templates/hello.html 두기 
+<html>
+     <head>
+       <script type = "text/javascript"
+          src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
+    </head>
+   
+    <body>
+       <input type = "button" onclick = "sayHello()" value = "Say Hello" />
+    </body>
+</html>
+
+server8.py
+from flask import Flask
+from flask import request
+from flask import session
+from flask import render_template;
+
+app = Flask(_ee_name__)
+
+#라우팅 
+@app.route("/")
+def index():
+    return render_template("hello.html" )
+
+if __name__ == "__main__":
+    app.debug = True  #서버 자동 재시작
+    app.run()
+
+
+이미지랑 스타일주기
+/static/mystyle.css
+/static/images/a.jpg
+
+<html>
+     <head>
+       <script type = "text/javascript"    src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
+       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'mystyle.css') }}">
+    </head>
+   
+    <body>
+        정적 파일들을 연결해봅시다.<br/>
+       <input type = "button" onclick = "sayHello()" value = "Say Hello" />
+
+       <img src="{{url_for('static', filename = 'images/a.jpg') }}" alt="">
+    </body>
+</html>
+
+
+
+
+전체프로젝트구조 
+
+http://flask.pocoo.org/docs/1.0/tutorial/
+https://github.com/pallets/flask/tree/1.0.2/examples/tutorial
+
+플라스크 실행 
+
+pip install flask
+pip install Blinker
+pip install SimpleJSON 
+pip install python-dotenv
+pip install Watchdog 
+
+#필요로 하는 라이브러리 모두 설치 
+pip install --editable .
+
+set FLASK_APP=flaskr
+set FLASK_ENV=development
+flask run
+
+
+        / Flaskr /
+
+                 a minimal blog application
+
+
+    ~ What is Flaskr?
+
+      A sqlite powered thumble blog application
+
+    ~ How do I use it?
+
+      1. edit the configuration in the flaskr.py file or
+         export an FLASKR_SETTINGS environment variable
+         pointing to a configuration file.
+
+      2. install the app from the root of the project directory
+
+         pip install --editable .
+
+      3. Instruct flask to use the right application
+
+        set FLASK_APP=flaskr
+				set FLASK_ENV=development
+				flask run
+
+
+      4. initialize the database with this command:
+
+				 cd flaskr
+         flask initdb
+
+      5. now you can run flaskr:
+
+         flask run
+
+         the application will greet you on
+         http://localhost:5000/
+
+    ~ Is it tested?
+
+      You betcha.  Run `python setup.py test` to see
+      the tests pass.
+
+
+#투토리얼 예제 작동하는 방법 
+https://github.com/pallets/flask/tree/1.1.x/examples/tutorial
+
+
+
+flask-tutorial-master 폴더에서 한다 
+
+pip install --editable .
+
+set FLASK_APP=flaskr
+set FLASK_ENV=development
+flask run
+
+flask init-db
+
+http://localhost:5000/hello
+
+http://localhost:5000/auth/register
+
+
+
+아래 구조로 폴더를 생성한다 
+
+hello 
+	ㄴ	hello
+			ㄴstatic:css, javascript, image, bootstrap.....
+			ㄴtemplates: html 
+			__init__.py -- hello라는 패키지를 풀면 무조건 이 파일먼저호출
+                                    -- 그 밖에필요한 파일들, python 
+				       나중에 blueprint라는걸 통해서 __init__.py
+				       에 연결 작업을 해야 한다 
+			
+	ㄴMENIFEST.in - textfile임
+	ㄴsetup.py - python 파일임 
+
+c:/flask_workspace
+   ㄴhello 
+        ㄴhello
+	    ㄴstatic
+	    ㄴtemplates
+
+     MANIFEST.in
+     setpu.py 
+
+파일명 : MANIFEST.in 
+include hello/schema.sql
+graft hello/static
+graft hello/templates
+global-exclude *.pyc
+
+파일명 : setup.py
+from setuptools import find_packages, setup
+
+setup(
+	name='hello',
+	version='1.0.0',
+	packages=find_packages(),
+	include_package_data=True,
+	zip_safe=False,
+	install_requires=[
+		'flask',
+	],
+)
+
+
+응용 프로그램 팩토리 - 플라스크 응용프로그램은 플라스크 인스턴스이다. 
+이 인스턴스를 전역으로 만들거나 별도의 팩토리로 계속 생성해서 보내야 한다 
+ 
+파일명 : __init__.py
+
+
+import os
+
+from flask import Flask
+
+def create_app(test_config=None):
+	
+	app = Flask(__name__, instance_relative_config=True) #플라스크 객체 생성
+	# __name__ : 모듈의 이름이 전달된다. 
+	# instance_relative_config : instance폴더에 대한 내용, 로컬데이터나 구성파일이 들어간다 
+	
+	app.config.from_mapping(
+        SECRET_KEY='devmyweb',
+				DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+  )
+	#기본구성설정 
+	#SECRET_KEY : Flask 및 확장 프로그램에서 데이터를 안전하게 유지하기 위해 사용됩니다. 
+	#'devmyweb'개발 중에 편리한 값을 넣어놓았음 실제 운영시 어려운 문자열로 바꿔야 한다 
+	#로컬 디비 위치값등 ....
+
+	#구성 설정 파일을 별도로 만든다면 이 파일을 우선시 한다. 없으면 
+	if test_config is None:
+		# load the instance config, if it exists, when not testing
+		app.config.from_pyfile('config.py', silent=True)
+	else:
+		# load tthe test config if passed in
+		app.config.from_mapping(test_config)
+
+	# ensure the instance folder exists
+	try:
+		os.makedirs(app.instance_path)
+	except OSError:
+		pass
+
+	# 그냥 샘플 만들기 
+	@app.route('/hello')
+	def hello():
+		return 'start flask .......'
+
+	return app
+
+
+빌딩 hello 폴더에서 한다 
+
+pip install --editable .
+
+폴더가 두개 만들어진다. 
+instance
+hello.egg-info
+
+환경변수 설정하기 - 앱등록, 
+개발모드로 작동시킨다. 
+코드가 수정되면 자동으로 서버가 재시작된다. 
+플라스크를 시작한다 
+set FLASK_APP=myhome 
+set FLASK_ENV=development
+flask run                  
+
+
+http://127.0.0.1:5000
+
+
+
+튜토리얼 코드 사용방법 
+1. pip install --editable . 
+
+2. 
+set FLASK_APP=flaskr 
+set FLASK_ENV=development
+flask run                  
+
+http://127.0.0.1:5000/hello 실행하고 나서 
+
+3. flask init-db   
+디비를 생성한다 
+
+http://127.0.0.1:5000/
+
+
+4. 서버 다시 시작하기 
+flask run 
+
+
+5.커버리지테스트
+pip install astroid
+pip install mccbe
+pip install pytest coverage
+
+
+6.배포
+pip install wheel
+
+c:/flask-tutorial-master
+python setup.py bdist_wheel
+
+build, dist 두개의 폴더가 생성된다. 
+dist/flaskr-1.0.0-py3-none-any.whl 파일 생성
+
+pip install flaskr-1.0.2-py3-none-any.whl
+
+외부패키지 설치되는 위치
+C:\Users\사용자계정\AppData\Local\Programs\Python\Python37\Lib\site-packages
+
+아래 경로에 설치되었음
+C:\Users\user\AppData\Local\Programs\Python\Python37\Lib\site-packages\flaskr
+
+set FLASK_APP=flaskr 
+flask init-db
+flask run                  
+
+
+myhome 
+  myhome
+    static
+    templates
+  MANIFEST.in
+  setup.py
+
+cd /flask_workspace/myhome 
+pip install --editable . 
+
+set FLASK_APP=myhome 
+set FLASK_ENV=development
+flask run  
+
+http://127.0.0.1:5000/hello
+
+
+mysql 
+connection - 트랜잭션 , commit() 
+cursor - 읽고, 쓰기 , execute, fetchone, fetchall
+
+sqlite3 
+  connection- commit, fetchone, execute, fetchall  
+  cursor 
+
+mysql  입장에서는 cursor.execute 함수가 반환값이 정수 
+
+cursor.execute(쿼리, ()).fetchall() - X, 에러발생  
+
+
+was 의 역할은 model과 controller 만 남는다 view 는 프론트앤드 프레임워크들
+angular, react, vue, redict ... 
+
+html, css, javascript 가 front end 쪽에서 
+
+front 쪽에서 데이타를 요구할떄 json형식으로 요구를 하고, 받아갈때 json 형식으로 
+
+
+
+resful api 사용하기 
+pip3 install flask-restful
+
+
+curl 프로그램 - 웹 테스트 프로그램 
+curl http://127.0.0.1:5000/
+{"hello": "world"}
+
+파일명 : jsonserver1.py
+
+from flask import Flask
+from flask_restful import Resource, Api
+
+app = Flask(__name__)
+api = Api(app)
+
+class HelloWorld(Resource):
+    def get(self):
+        return {'hello': 'world'}
+
+api.add_resource(HelloWorld, '/')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+파일명:jsonserver2.py
+from flask import Flask, request
+from flask_restful import Resource, Api
+
+app = Flask(__name__)
+api = Api(app)
+
+todos = {'1':'go to company', '2':'go to movie'}
+
+class TodoSimple(Resource):
+    def get(self, todo_id):
+        return {todo_id: todos[todo_id]}
+
+    def put(self, todo_id):
+        todos[todo_id] = request.form['data']
+        return {todo_id: todos[todo_id]}
+
+		def post(self, todo_id):
+        todos[todo_id] = request.form['data']
+        return {todo_id: todos[todo_id]}
+
+api.add_resource(TodoSimple, '/<string:todo_id>')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+http://127.0.0.1:5000/1
+http://127.0.0.1:5000/2
+
+curl http://localhost:5000/todo1 -d "data=Remember the milk" -X PUT
+
+
+
+파일명 : jsonServer3.py
+
+from flask import Flask
+from flask_restful import reqparse, abort, Api, Resource
+
+app = Flask(__name__)
+api = Api(app)
+
+TODOS = {
+    'todo1': {'task': 'build an API'},
+    'todo2': {'task': 'play'},
+    'todo3': {'task': 'profit!'},
+}
+
+
+def abort_if_todo_doesnt_exist(todo_id):
+    if todo_id not in TODOS:
+        abort(404, message="Todo {} doesn't exist".format(todo_id))
+
+#클라이언트로부터 오는 값을 리스ㅌ 에 저장하기 위한 파서 선언하기 
+parser = reqparse.RequestParser()
+parser.add_argument('task')
+
+
+# Todo
+# 객체 하나만 보내기 
+class Todo(Resource):
+    def get(self, todo_id):
+        abort_if_todo_doesnt_exist(todo_id)
+        return TODOS[todo_id]
+
+		#delete
+    def delete(self, todo_id):
+        abort_if_todo_doesnt_exist(todo_id)
+        del TODOS[todo_id]
+        return '', 204
+
+		#put 메서드 
+    def put(self, todo_id):
+        args = parser.parse_args()
+        task = {'task': args['task']}
+        TODOS[todo_id] = task
+        return task, 201
+
+
+# TodoList
+# shows a list of all todos, and lets you POST to add new tasks
+class TodoList(Resource):
+    def get(self):
+        return TODOS
+
+    def post(self):
+        #값 받아서 리스트에 추가한다 - 받을 값이 {'task':'데이터'}
+        args = parser.parse_args()
+        todo_id = int(max(TODOS.keys()).lstrip('todo')) + 1
+        todo_id = 'todo%i' % todo_id
+        TODOS[todo_id] = {'task': args['task']}
+        return TODOS[todo_id], 201
+
+
+#두개의 리소스를 추가한다. 
+api.add_resource(TodoList, '/todos')
+api.add_resource(Todo, '/todos/<todo_id>')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+guestbook.py
+# -- coding: utf-8 --
+
+from flask import Flask, Response
+from flask_restful import reqparse, abort, Api, Resource
+import pymysql 
+import json
+
+app = Flask(__name__)
+api = Api(app )
+
+
+def abort_if_todo_doesnt_exist(todo_id):
+    pass
+    #if id not in guestbookData:
+    #    abort(404, message="Todo {} doesn't exist".format(todo_id))
+
+parser = reqparse.RequestParser()
+parser.add_argument('id')
+parser.add_argument('title')
+parser.add_argument('contents')
+parser.add_argument('writer')
+
+guestbookData=[
+    {'id':'1', 'title':'제목1', 'contens':'내용1', 'writer':'홍길동1'},
+    {'id':'2', 'title':'제목2', 'contens':'내용2', 'writer':'홍길동2'},
+    {'id':'3', 'title':'제목3', 'contens':'내용3', 'writer':'홍길동3'},
+    {'id':'4', 'title':'제목4', 'contens':'내용4', 'writer':'홍길동4'},
+    {'id':'5', 'title':'제목5', 'contens':'내용5', 'writer':'홍길동5'}
+]
+
+# Todo
+# 객체 하나만 보내기 
+class Guestbook(Resource):
+    def get(self, id):
+        abort_if_todo_doesnt_exist(id)
+        jsonStr = json.dumps(guestbookData[int(id)], ensure_ascii=False).encode('utf8')
+        return Response(jsonStr, content_type='application/json; charset=utf-8')
+
+
+    def delete(self, id):
+        abort_if_todo_doesnt_exist(id)
+        del guestbookData[id]
+        return '', 204
+
+    def put(self, id):
+        args = parser.parse_args()
+        data = {'id': args['id'], 
+                'title':args['title'], 
+                'contents':args['contents'], 
+                'writer':args['writer']}
+        print(data)
+        guestbookData.append( data)
+        return data, 201
+
+
+# TodoList
+# shows a list of all todos, and lets you POST to add new tasks
+class GuestbookList(Resource):
+    def get(self):
+        jsonStr = json.dumps(guestbookData, ensure_ascii=False).encode('utf8')
+        return Response(jsonStr, content_type='application/json; charset=utf-8')
+
+
+#두개의 리소스를 추가한다. 
+api.add_resource(GuestbookList, '/guestbook')
+api.add_resource(Guestbook, '/guestbook/<id>')
+
+
+if __name__ == '__main__':
+   
+    app.run(debug=True)
+    
+
+
+블루프린트 추가하기 myhome에 추가하자
+import os
+
+from flask import Flask, g
+
+
+def create_app(test_config=None):
+	
+	app = Flask(__name__, instance_relative_config=True) #플라스크 객체 생성
+	# __name__ : 모듈의 이름이 전달된다. 
+	# instance_relative_config : instance폴더에 대한 내용, 로컬데이터나 구성파일이 들어간다 
+	
+
+	app.config.from_mapping(
+        SECRET_KEY='devmyweb',
+    )
+	#기본구성설정 
+	#SECRET_KEY : Flask 및 확장 프로그램에서 데이터를 안전하게 유지하기 위해 사용됩니다. 
+	#'devmyweb'개발 중에 편리한 값을 넣어놓았음 실제 운영시 어려운 문자열로 바꿔야 한다 
+	#로컬 디비 위치값등 ....
+
+	#구성 설정 파일을 별도로 만든다면 이 파일을 우선시 한다. 없으면 
+	if test_config is None:
+		# load the instance config, if it exists, when not testing
+		app.config.from_pyfile('config.py', silent=True)
+	else:
+		# load tthe test config if passed in
+		app.config.from_mapping(test_config)
+
+	# ensure the instance folder exists
+	try:
+		os.makedirs(app.instance_path)
+	except OSError:
+		pass
+
+	# 그냥 샘플 만들기 
+	@app.route('/hello')
+	def hello():
+		return 'start hello .......'
+
+	@app.route('/myhome')
+	def myhome():
+		return 'start myhome .......'
+
+	#모듈 결합하기 
+	from . import db
+	#db.init_app(app)
+
+	from . import auth
+	app.register_blueprint(auth.bp)
+
+	from . import blog
+	app.register_blueprint(blog.bp)
+	app.add_url_rule('/', endpoint='index' )
+
+
+	#블루프린트 등록하기 
+	from . import guestbook
+	app.register_blueprint(guestbook.bp)
+
+	return app #플라스크 인스턴스를 반환한다 
+
+
+
+# -- coding: utf-8 --
+from flask import(
+	Blueprint, flash, g, redirect, render_template, request, url_for,
+	Response
+)
+from werkzeug.exceptions import abort
+from flask_restful import reqparse, abort, Api, Resource
+import json
+from myhome.auth import login_required
+from myhome.db import get_db
+import pymysql
+
+
+bp = Blueprint('guestbook', __name__ )
+
+api = Api(bp )
+
+def abort_if_todo_doesnt_exist(todo_id):
+    pass
+    #if id not in guestbookData:
+    #    abort(404, message="Todo {} doesn't exist".format(todo_id))
+
+parser = reqparse.RequestParser()
+parser.add_argument('id')
+parser.add_argument('title')
+parser.add_argument('contents')
+parser.add_argument('writer')
+
+
+guestbookData=[
+    {'id':'1', 'title':'제목1', 'contens':'내용1', 'writer':'홍길동1'},
+    {'id':'2', 'title':'제목2', 'contens':'내용2', 'writer':'홍길동2'},
+    {'id':'3', 'title':'제목3', 'contens':'내용3', 'writer':'홍길동3'},
+    {'id':'4', 'title':'제목4', 'contens':'내용4', 'writer':'홍길동4'},
+    {'id':'5', 'title':'제목5', 'contens':'내용5', 'writer':'홍길동5'}
+]
+
+
+
+# Todo
+# 객체 하나만 보내기 
+class Guestbook(Resource):
+    def get(self, id):
+        abort_if_todo_doesnt_exist(id)
+        jsonStr = json.dumps(guestbookData[int(id)], ensure_ascii=False).encode('utf8')
+        return Response(jsonStr, content_type='application/json; charset=utf-8')
+
+
+    def delete(self, id):
+        abort_if_todo_doesnt_exist(id)
+        del guestbookData[id]
+        return '', 204
+
+    def put(self, id):
+        args = parser.parse_args()
+        data = {'id': args['id'], 
+                'title':args['title'], 
+                'contents':args['contents'], 
+                'writer':args['writer']}
+        print(data)
+        guestbookData.append( data)
+        return data, 201
+
+class GuestbookList(Resource):
+    def get(self):
+        db = get_db().cursor(pymysql.cursors.DictCursor)
+        db.execute("select id, title, contents, writer from guestbook")
+        guestbookData = db.fetchall()
+        jsonStr = json.dumps([dict(x) for x in guestbookData], ensure_ascii=False).encode('utf8')
+        return Response(jsonStr, content_type='application/json; charset=utf-8')
+
+
+#두개의 리소스를 추가한다. 
+api.add_resource(Guestbook, '/guestbook/get/<id>')
+api.add_resource(GuestbookList, '/guestbook/list')
+
+
+새로운 튜토리얼
+Flaskr
+The basic blog app built in the Flask tutorial.
+
+Install
+Be sure to use the same version of the code as the version of the docs you're reading. You probably want the latest tagged version, but the default Git version is the master branch.
+
+# clone the repository
+$ git clone https://github.com/pallets/flask
+$ cd flask
+# checkout the correct version
+$ git tag  # shows the tagged versions
+$ git checkout latest-tag-found-above
+$ cd examples/tutorial
+Create a virtualenv and activate it:
+
+$ python3 -m venv venv
+$ . venv/bin/activate
+Or on Windows cmd:
+
+$ py -3 -m venv venv
+$ venv\Scripts\activate.bat
+Install Flaskr:
+
+$ pip install -e .
+Or if you are using the master branch, install Flask from source before installing Flaskr:
+
+$ pip install -e ../..
+$ pip install -e .
+Run
+$ export FLASK_APP=flaskr
+$ export FLASK_ENV=development
+$ flask init-db
+$ flask run
+Or on Windows cmd:
+
+> set FLASK_APP=flaskr
+> set FLASK_ENV=development
+> flask init-db
+> flask run
+Open http://127.0.0.1:5000 in a browser.
+
+python 업데이트
+python -m pip install --upgrade pip
+
+Test
+$ pip install '.[test]'
+$ pytest
+Run with coverage report:
+
+$ coverage run -m pytest
+$ coverage report
+$ coverage html  # open htmlcov/index.html in a browser
+    
+
+
+cd /플라스크/flask_workspace2/myhome-project
+set FLASK_APP=myhome
+set FLASK_ENV=development
+flask run
+
+
+cors 에러체크 
+참고사이트 : https://webisfree.com/2020-01-01/python-flask%EC%97%90%EC%84%9C-cors-cross-origin-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
+https://flask-cors.readthedocs.io/en/latest/
+
+pip install flask_cors
+
+from flask_cors impot CORS, cross_origin
+
+CORS(app)
+특정 주소, 도메인, 포트 등만 사용 가능하도록 설정하기
+만약 모든 곳이 아닌 원하는 주소만 호출할 수 있도록 변경할 수도 있습니다. CORS()의 두번째 인자에 resources를 사용하고 origin과 그 값으로 허용할 도메인 주소를 입력합니다.
+CORS(app, resources={r'*': {'origins': '*'}})
+
+CORS(app, resources={r'*': {'origins': 'https://webisfree.com'}})
+
+CORS(app, resources={r'/_api/*': {'origins': 'https://webisfree.com:5000'}})
+
+
+CORS(application, resources={r'*': {'origins': ['https://webisfree.com', 'http://localhost:8080']}})
+
+

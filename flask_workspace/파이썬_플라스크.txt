@@ -1,0 +1,2644 @@
+파이썬 실습 예제 
+무료 편집기  : https://www.jetbrains.com/pycharm-edu/
+파이썬 튜토리얼 : http://tutorial.djangogirls.org/ko/python_introduction/index.html
+파이썬  API 도움말 : https://docs.python.org/3/tutorial/datastructures.html
+파이썬 개발 환견 만들기 : http://yaraba.tistory.com/173
+이클립스 파이썬 플러그인 주소 : http://pydev.org/updates
+numpy, matplotlib tutorial : http://ishuca.tistory.com/373
+http://pythonexcels.com/python-excel-mini-cookbook/
+https://openpyxl.readthedocs.io/en/latest/usage.html#read-an-existing-workbook
+https://docs.continuum.io/anaconda/excel
+
+
+비주얼 스튜디오 코드 사용법
+https://demun.github.io/vscode-tutorial/shortcuts/
+
+
+경로 path에 추가하기
+C:\Users\user\AppData\Local\Programs\Python\Python37
+
+
+visual studio와 연동하기 
+폴더열기 새로운 폴더 만든후 연결하기 
+디버그에서 구성추가하기  - more 선택 - 파이썬 선택후 사용 (젤 위쪽에 있음)
+확장 프로그램에서 python 설치하기 
+
+
+##############################
+		자료타입과 연산자
+##############################
+예제 1-1) 타입연습  - 파이썬에서는 변수 선언시 특별한 데이터 타입을 지정할 필요가 없다 
+#-*- coding: utf-8 -*-
+
+a = 14;
+print(a);
+print(type(a))
+
+a = 4.5;
+print(a)
+print(type(a))
+
+a = 'python'
+print(a)
+print(type(a))
+
+a = [1,2,3,4]
+print(a)
+print(type(a))
+
+a={1,2,3}
+print(a)
+print(type(a))
+
+a =(1,2,3)
+print(a)
+print(type(a))
+
+예제 1-2) 사칙연산
+#-*- coding: utf-8 -*-
+
+a = 7
+b = 4
+print(a+b)  
+print(a-b)  
+print(a*b)
+print(a/b)# int / int 는 float 형이다 
+print(a//b) #몫구하기
+print(a%b)  #나머지 
+print(a**b) #거듭제곱
+
+#복소수 연산하기 
+a = 4+3j;
+print(a.real)
+print(a.imag)
+b = 3-2j;
+print (a.conjugate())
+c =a+b
+print(c)
+
+예제 1-3)출력 연습 
+#-*- coding: utf-8 -*-
+print('*****');   #자동 줄바꿈 
+print('**', end='')   #end='' 를 줌으로써 줄을 변경하지 않는다. 이클립스에서는 계속 빨간줄이 뜨나 무시해도 됨 
+print('***', end='')
+print("I like star")
+
+
+예제 1-4) 입력연습 -  키보드로 부터 데이타를 입력받아보기 
+input 함수에게 prompt 를 줄 수 있다는게 이전 언어와 많이 다릅니다 
+
+#-*- coding: utf-8 -*-
+name  = input("your name ? ")
+address = input("your address?")
+print(name + "'s address is " + address)
+
+
+예제 1-5)정수 입력 연습 
+#-*- coding: utf-8 -*-
+
+a = int(input("가로 : "))
+b = int(input("세로 : "))
+
+c = a*b
+
+print('가로 {0} X 세로 {1} ={2}'.format(a, b, c))
+
+예제 1-6) 진법 변환 출력 
+a = 30;
+print(hex(a))
+print(oct(a))
+print(bin(a))
+
+
+예제 1-7)String 타입 
+#-*- coding: utf-8 -*-
+s = "Python is powerful"
+#첫글자를 대문자로
+print(s.capitalize())
+#특정 문자 카운트
+print(s.count('p'))
+print("한글".encode('utf-8'))
+print("한글".encode('cp949'))
+print(s.find('power'))
+
+
+
+greeting = 'Hello python'
+print( greeting[:3])
+print( greeting[1:3])
+print( greeting[3:])
+print( greeting[2:5])
+print( greeting[:-1])
+print( greeting[6:])
+
+
+greetings = ['flower', 'rose', 'lily']
+print(greetings[1])
+print(greetings[0:2])
+print(greetings[1:3])
+
+예제 1-7-2)list타입연습
+colors = ['red', 'blue', 'gold']
+print(colors[0])
+print(colors[0:2])
+
+colors.append('green')
+colors.insert(1, 'yellow')
+colors.extend(['white', 'gray'])
+print(colors)
+print('red' in colors )
+
+colors += ['red']
+colors += 'red'  
+colors[2] = 'silver'
+
+print(colors)
+print(colors.index('red'))
+print(colors.index('red', 1))
+print(colors.count('red'))
+
+del colors[0]
+print(colors)
+
+colors.pop()    
+print(colors)  
+colors.remove('silver')
+print(colors)
+colors.sort() 
+print(colors)    
+colors.reverse()
+
+
+
+#정규식 처리하기 
+import re  #모듈 추가 
+print(bool(re.match('[0-9]*th', '35th')))
+print(bool(re.search('[0-9]*th', '35th')))
+print(bool(re.match('[0-9]*th', '35th')))
+print(bool(re.search('[0-9]*th', '35th')))
+
+
+#search : string 전체를 검색하여 match 되는 첫번째 문자열을 찾음.
+#  <match object> = re.search( pattern, string, flag=0)
+#match : string 의 첫 문자열만을 비교하여 pattern 과 match 되는지를 확인.
+#  <match object> = re.match( pattern, string, flag=0)
+#findall : string 전체에서 pattern 과 일치하는 것을 모두 찾아서 list 로 리턴해줌.
+#  [list of groups, list of tuples] = re.findall( pattern, string, flag=0 )
+  
+txt="littleconan@hanmail.net"
+match = re.search("([\.0-9a-zA-Z_-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}" , txt)
+       
+if match:   
+    print('{} is valid email address.' .format(match.group()))
+    
+    
+txt = "Queen yuna is Olymphic champion. yuna is perfect"
+match = re.match("yu", txt)
+print(bool(match))
+match = re.search("yu", txt)
+print(bool(match))
+match = re.findall("yu", txt)
+for item in match:
+    print(item)
+    
+    
+print(re.split("[:., ]+", 'apple Orange:banana  tomato,melon.mango')) #분리할 문자들 
+print(re.split("([:., ])+", 'apple Orange:banana  tomato,melon.mango')) #()를 넣으면 기호도 분리된다 
+print(re.split("[:., ]+", 'apple Orange:banana  tomato,melon.mango',2))#2개만 분리 
+
+text = """Gee Gee Gee Gee Gee Baby Baby
+oh 너무 부끄러워 
+쳐다볼 수 없어 """
+
+print(re.split("\n+", text))
+  
+#주민번호 추출하기 (정규식 사용하기)
+data = """
+park 800905-1049118
+kim  700905-1059119
+"""
+
+pat = re.compile("(\d{6})[-]\d{7}")
+print(pat.sub("\g<1>-*******", data))
+
+print(re.findall("app\w*", "application orange apple banana"))
+print(re.findall("king\w*", "application orange apple banana"))
+
+print(re.sub("-", "@", "901225-1234567"))
+
+
+
+import time  #time 관련 모듈 
+print(time.time())
+print(time.gmtime())
+t = time.gmtime()      #  -- UTC 기준의 현재 시간 
+t = time.localtime()
+print(str(t.tm_year)+"년")
+print(str(t.tm_mon)+"월")
+print(str(t.tm_mday)+"일")
+print(str(t.tm_hour)+"시")
+print(str(t.tm_min)+"분")
+print(str(t.tm_sec)+"초")
+
+
+for i in range(1, 11, 1):
+    #time.sleep(1)
+    print(i)
+
+print(time.asctime(t))
+
+from time import  localtime, strftime
+print(strftime("%Y %B %d", t))
+
+
+import datetime  #날짜시간관련 모듈
+date = datetime.date(2016,4,30)
+today = datetime.date.fromtimestamp(time.time()) #오늘 날짜 timestamp 형식으로 전달한다 
+print(date)
+print(today)
+print(datetime.date.today())
+print(date.year)
+print(date.month)
+print(date.day)
+
+d = date.replace(day=25)
+print(date)
+print(d)
+
+
+from datetime import timedelta   #timedelta모듈에서 datetime 만 끌고 들어옴 
+t1 = datetime.timedelta(-3)
+t2 = datetime.timedelta()
+
+t3 = t2 - t1
+
+print(date + t3) 
+#오늘로 부터 100일 후 
+d = date.today() + datetime.timedelta(100)
+print(d)
+
+print(date.today() - d)
+
+d1 = date.today()
+print(str(d1.year) + "-" + str(d1.month)+" "+str(d1.day))
+
+print(datetime.date(2016, 4, 30))
+
+import calendar
+print(calendar.monthrange(2002,1))
+print(calendar.monthrange(2008,2))
+print(calendar.monthrange(2100,2))
+print(calendar.monthrange(2016,4)[1])
+
+
+예제 1-8) List 타입
+#-*- coding: utf-8 -*-
+colors=['red', 'green', 'blue'];
+print(colors);
+#맨뒤에 데이타 추가하기 
+colors.append('yellow');
+print(colors);
+#데이타를 중간에 끼워넣기 
+colors.insert(1, 'magenta');
+print(colors);
+#list에 다른 list 를 추가하기 
+colors.extend(['white', 'black']);  #반드시 list 만 extend 가능하다 
+print(colors);
+colors += ['violet'];  #append처럼 동작함 
+print(colors);
+print(colors.index('red', 0, 5))  #위치 찾기 - 시작위치, 마지막 위치 
+
+print(colors.index('black', 0, len(colors)))  #위치 찾기 
+
+print(colors.count('red'))  #현제 데이타 개수 알아내기 
+print(colors.count('빨강'))  #현제 데이타 개수 알아내기 
+
+#- 데이타 정렬하기 
+colors.sort();
+print( colors );
+
+#- 역정렬하기 sort 함수의 인수로 함수의 주소값을 전달한다 key 라는 변수에 mysort 함수를 전달한다 
+#데이타를 하나씩 비교할때 사용자 함수를 호출한다 
+def mysort(x):return x[-1];
+
+colors.sort(key=mysort);
+print( colors );
+
+fruits = ["apple", "banana", "berri", "orange"]
+
+for temp in fruits:
+    print(temp)
+    
+print(fruits[0])
+print(fruits[1])
+print(fruits[2])
+print(fruits[3])
+
+print("데이타 길이 : " , len(fruits))
+
+for i in range(0, len(fruits)):
+    print(fruits[i])
+
+fruits = ['사과', '딸기', '수박']
+fruits.append('참외')
+fruits.insert(3, '포도')
+print(fruits)
+
+
+예제 1-9)튜플타입 
+#-*- coding: utf-8 -*-
+#리스트와 유사, 읽기전용, []대신 ()로 묶음, 읽기전용이라 속도 빠름 
+a = (1,2,3)  #3개를 묶어서 하나의 타입으로 만들어준다 
+print(a)
+
+for item in a:
+    print(item)
+
+#swap 가능함 
+a, b = 1, 8
+b, a = a, b 
+print(a, b)
+
+연습문제1.py
+#-*- coding: utf-8 -*-
+
+nameList = ['홍길동', '고길동', '장길산', '임꺽정']
+phoneList = ['010-0000-0000', '010-0000-0001', '010-0000-0002', '010-0000-0003']
+
+for i in range(0, len(nameList)):
+    print(nameList[i], ' ', phoneList[i])
+
+allList = [
+             ['홍길동', '010-0000-00000'],
+             ['고길동', '010-0000-00001'],
+             ['장길산', '010-0000-00002'],
+             ['임꺽정', '010-0000-00003'],
+          ]
+
+for i in range(0, len(allList)):
+    print(allList[i][0], ' ', allList[i][1])
+
+
+예제 1-10)집합(set) 타입 
+#-*- coding: utf-8 -*-
+
+a = {1,2,3}
+b = {3,4,5,6}
+
+print(a.intersection( b))       #교집합
+print(a.union(b))        #합집합
+print(a - b)             #차집합
+print(a | b)             #합집합
+print(a & b)             #교집합
+
+
+예제 1-11)dictionry 타입 
+#-*- coding: utf-8 -*-
+"""
+mydic=dict(a=1, b=2, c=3)
+
+print(mydic['a'])
+print(mydic['b'])
+print(mydic['c'])
+
+mydic=dict(red="빨간색", green="푸른색", black="검은색")
+print(mydic['red'])
+print(mydic['green'])
+print(mydic['black'])
+
+for item in mydic:
+    print("key:{0} value:{1}".format( item, mydic[item]))
+
+print( mydic.keys())
+print( mydic.items())
+
+"""
+    
+dict = {'Name': 'Zara', 'Age': 7, 'Class': 'First'}
+
+print(dict)
+
+del dict['Name']; #Name 삭제 
+print ("dict['Age']: ", dict['Age'])
+print ("dict['Name']: ", dict['Age'])
+dict['School']="구갈초등학교"
+print ("dict['School']: ", dict['School'])
+dict.clear();     # remove all entries in dict
+del dict ;        # 객체 삭제 
+
+print ("dict['Age']: ", dict['Age'])
+
+
+예제 1-12)DIC 타입 엲습 
+#-*- coding: utf-8 -*-
+myDic = dict();
+ 
+myDic["red"]="빨간색"
+myDic["green"]="초록색"
+myDic["blue"]="파란색"
+myDic["magenta"]="분홍색"
+myDic["cyan"]="하늘색"
+myDic["black"]="검은색"
+myDic["white"]="흰색"
+
+
+print(myDic["red"])
+print(myDic["green"])
+print(myDic["magenta"])
+
+
+print("############")
+#차례대로 출력하기 
+for key in myDic.keys():
+    print( myDic[key])
+print("###########")
+
+sel = input("색을 입력하세요 ")
+if sel not in myDic :
+    print("존재하지 않음")
+else:
+    print(myDic[sel])
+    
+    
+#dic 연습 더하기 
+sports = {"김연아":"피겨스케이팅", "류현진":"야구", "박지성":"축구", "메시":"축구"}
+for item in sports: #특별히 뭐라 하지 않아도 키값만 나온다 똑똑함 
+    print(item + " : " + sports[item])
+    
+#또 한 가지 주의해야 할 사항은 Key에 리스트는 쓸 수 없다는 것이다. 하지만 튜플은 Key로 쓸 수 있다. 
+#딕셔너리의 Key로 쓸 수 있느냐 없느냐는 Key가 변하는 값인지 변하지 않는 값인지에 달려 있다.
+# 리스트는 그 값이 변할 수 있기 때문에 Key로 쓸 수 없는 것이다.
+#아래 예처럼 리스트를 Key로 설정하면 리스트를 키 값으로 사용할 수 없다는 형 오류(TypeError)가 발생한다.
+
+
+#키값 삭제하기 
+sports.__delitem__("메시")
+for item in sports: 
+    print(item + " : " + sports[item])
+
+
+예제 1-13) list, tuple, set 간의 데이타 전환하기 
+생성자 이용해서 리스트와 튜플, 집합 상호변환 가능
+set , list, tuple 
+
+a={1,2,3}
+b=[4,5,6]
+c = tuple(a)
+print(type(c))
+print(c)
+
+d = list(c)
+d.append(8)
+print(d)
+
+e = a | set(b)
+print(e)
+
+#####################################
+제어문(if, for, while, break, continue)
+#####################################
+
+예제 2-1) if문 제어하기 
+n = int(input("Input your score : "))  
+if n<0 or n>100 :
+	print ("Error")
+else:
+	if n>=90 :
+		print("A")
+	elif n>=80:
+		print("B")
+	elif n>=70:
+		print("C")
+	elif  n>=60:
+		print("D")
+	else:
+		print("F")
+
+예제 2-2)근무시간  시간당 급여액을 입력받아 급여를 구하세요 40시간 초과 근무를 했을경우 50% 초과 수당을 지급합니다. 
+
+hours = float(input("Enter Hours : "))
+rate = float(input("Enter Rate : "))
+pay = hours * rate 
+if( hours>=40):
+    pay = pay + (hours-40)*rate*0.5
+print("Pay : " + str(pay))
+
+예제 2-3)예제2-2 에서 위의 예제에 잘못된  예외처리 
+try:
+    hours = float(input("Enter Hours : "))
+    rate = float(input("Enter Rate : "))
+    pay = hours * rate 
+    if( hours>=40):
+        pay = pay + (hours-40)*rate*0.5
+    print("Pay : " + str(pay))
+except ValueError:
+    print("Error, please enter numeric input")
+
+예제 2-4)for 문 활용하기 ( 1~100 까지 중에서 3의 개수와 합 구하기 ) 
+파이썬에서의 for문은 range 객체를 이용한다 
+
+cnt=0
+sum=0
+for i in range(1, 100, 1):
+    if( i%3==0) :
+        cnt=cnt+1
+        sum= sum+i
+        print(i)
+
+print("cnt : " + str(cnt))
+print("sum : " + str(sum))
+
+예제 2-5) 1~9 까지의 수 중에서 하나 입력받다 짝수이면 그 값부터 짝수만 출력, 홀수이면 그 값부터 홀수만 출력하기 
+n = int(input("Input 1~9 number : "))
+if( n%2==0):
+    for i in range(n, 100, 2):
+        print(i)
+else:
+     for i in range(n, 100, 2):
+        print(i)
+
+예제 2-6) 랜덤값 얻기
+#-*- coding: utf-8 -*-
+
+import random
+print(random.random())
+print(random.random())
+print(random.random())
+
+print(random.uniform(3,4))  # 3과 4사이의 float값
+
+for i in range(3):
+    print(random.gauss(1, 1.0)) #평균이 1, 표준편자가 1.0인 정규분호의 난수 발생 
+
+print("#임의의 정수 ")
+for i in range(10):
+    print (random.randrange(10) )
+
+print("#임의의 정수-중목없이 ")
+for i in range(10):
+    print (random.sample(range(10), 10) )
+    
+print("#임의의 정수-3의 배수만 ")
+for i in range(10):
+    print (random.randrange(0, 20, 3))
+    
+print("리스트나 튜플에서 임의로 몇개 선택하기")
+l = list(range(1, 21))
+for i in range(10):
+    print(random.choice(l)) #중복되게 선택
+    
+print(random.sample(l, 4))  #중복안되게 선택
+
+
+random.shuffle(l)   #섞기 -- 원본 바뀜
+print(l)
+
+s = random.sample(l, 20)  #원본 안바뀜
+print(l)
+print(s)
+
+예제 2-7) while, break, continue
+#-*- coding: utf-8 -*-
+count = 1
+while (count <=10):
+   print('The count is:', count)
+   count = count + 1
+
+print ("Good bye!")
+
+
+#break 문 사용
+count = 1
+while(1==1):
+   if(count==5):
+       break;
+   print('The count is:', count)
+   count = count + 1
+
+print ("Good bye!")
+
+
+#continue 문 사용 
+count = 1
+while(count<=10):
+   if(count==5):
+       continue;
+   print('The count is:', count)
+   count = count + 1
+
+print ("Good bye!")
+
+
+예제 2-8)
+def function1():
+    i=1
+    while i<=10:
+        print(i)
+        i = i+1
+
+
+def function2():
+    dataList = list()
+    
+    x = int(input("value : "))
+   
+    
+    while x > 0 :
+        dataList.append(x)
+        x = int(input("value : "))
+        
+    for item in dataList:
+        print(item)
+        
+def function3():
+    for i in [1,2,3,4,5]:
+        print(i)
+        
+    dic = {"orange":100, "banana":200, "apple":300}
+    
+    for i in dic:
+        print(i, dic[i])
+        
+    list = ["one", "two", "three", "four", "five"];
+    for i in list:
+        print(i)
+    
+    it = iter(list)
+    print(next(it))
+    print(next(it))
+    print(next(it))
+    print(next(it))
+    
+    it = iter(list)
+    for i in it:
+        print(i)
+        
+
+#function1()
+#function2()
+function3()
+        
+
+
+########################################
+				함수
+########################################
+
+예제 3-1)함수 연습 
+
+def function1():
+    age = int(input("나이는 ? "))
+    if age>=19 :
+        print("성인입니다.")
+    else:
+        print("미성년입니다")
+
+def function2():
+    gender = input("당신의 성별은 ? 남자? 여자?")
+    if gender=="남자" :
+        print("man")
+    else:
+        print("woman")
+    
+
+def function3():
+    score = int(input("성적은? "))
+    if score>=90 :
+        grade="수"
+    elif score>=80 :
+        grade="우"
+    elif score>=70 :
+        grade="미"
+    elif score>=60 :
+        grade="양"
+    else:
+        grade="가"
+        
+    print(grade)
+    
+def function4():
+    perpay = int(input("시간당급여액 "))
+    worktime = int(input("근무시간 "))
+    if worktime>40:
+        pay = 40* perpay + (worktime-40)*perpay*1.5
+    else:
+        pay = worktime*perpay
+    print(pay)
+ 
+def function5():
+    x = int(input("X = "))
+    
+    if( 2 & 4):
+        print("dd")
+    else:
+        print("aa")
+    
+    print(int(10/x))
+    if(x & int(10/x)):
+        print(10/x)
+    else:
+        print("오류")
+
+
+	
+function1() 
+function2()
+function3()
+function4()
+function5()
+
+예제 3-2) 함수에 인자 전달예제 
+
+#-*- coding: utf-8 -*-
+
+def add(x, y):
+    return x+y
+    
+print( add(4,5))
+
+
+def sigma(limit):
+    s=0
+    for i in range(1, limit+1):
+        s = s+i
+    return s
+    
+print( sigma(10))
+
+def abs(x):
+    if(x<0 ):
+        return -x;
+    else:
+        return x;
+    
+print( abs(10))
+
+def sigmalist(a):
+    s=0
+    for item in a:
+        s =s +item
+    return s
+
+print( sigmalist([1,2,3,4,5,6,7,8,9,10]))
+
+def concat(a):
+    s="";
+    for item in a:
+        s =s + item + " "
+    return s
+print( concat(["일", "이", "삼", "사"]))
+
+
+에제 3-3)전역변수의 사용 
+
+전역변수를 함수안에서 사용하려면 global 변수명 으로 전역변수임을 따로 알려야 한다 알리지 않으면 
+무조건 별도의객체로 만들어서 사용한다 
+
+#-*- coding: utf-8 -*-
+x = 10
+def fun1():
+    x = 0
+    x = x+ 5   #위의 초기화 코드가 없으면 에러발생, 함수안에서  변수를 언제나 선언해야 한다 값을 초기화 하지 않은 상태에서 할당할 수 없댜
+    return x
+print(fun1())
+
+
+def fun2():
+    global x   #전역변수를 사용한다 
+    x = x+ 5   
+    return x
+print(fun2())
+
+#인터프리터 언어의 한계임  
+
+
+예제 3-4) 함수의 인자(기본값 부여하기)
+
+#-*- coding: utf-8 -*-
+
+#함수의 인자의 기본값을 부여할 경우 중간에 하나만 부여하거나 할 수 없다 
+"""
+def func(a=4, b):     
+    return a+b
+
+print( func(5))
+위 코드는 에러발생 : non-default argument follows default argument
+"""
+def func(a=4, b=3):     
+    return a+b
+
+#인자에 기본값을 줄 경우 함수의 호출방법이 다양하다 
+print( func())
+print( func(6))
+print( func(7,8))
+
+
+#이름으로 인자 전달하기
+def connectURL(server, port):
+    return server + " : " + port
+
+print(connectURL(port="3030", server="http://127.0.0.1"))
+
+
+#가변인자 리스트 
+def myprint(*args):
+    for item in args:
+        print(item)
+   
+myprint("학교", "집")
+myprint("학교", "집", "가방")
+
+
+def mysum(*args):
+    s=0
+    for item in args:
+        s = s + item
+        print(item)
+    return s
+
+print ( mysum(1,2,3))
+print ( mysum(10,20))
+print ( mysum(100,200,300,400,500))
+
+
+#정의되지 않은 인자 처리하기 (dic타입으로 전달 
+def myfunc(server, port, **user):
+    str = server + " : " + port + "?" 
+    for key in user.keys():
+        str += key + "=" + user[key]+"&"
+    return str
+
+print(myfunc("test.com", "9090", id='userid', password='1234', name='kim'))
+
+
+
+예제 3-5) 람다함수(이름이 없는 함수 간단한 한줄이내 함수 만들때)
+람다함수는 return 구문을 사용하지 않는다 
+lambda 키워드로 시작하고 인수를 쓴다 : 함수 수행코드를 작성한다 
+
+lambda x, y : x*y
+       이 함수는 x, y 두개의 인수를 받아서 x*y 를 수행하여 반환하는 함수이다 
+
+#-*- coding: utf-8 -*-
+
+g = lambda x, y : x*y  #두개의 변수를 곱해서 반환하는 함수의 주소를 g 에 저장하였음 
+print(g(4,5))
+
+a = [1,2,3,-4,5,-6,7,8,9,10]
+a.sort(key=lambda x : x*x, reverse=True) 
+print("a sort")
+for i in range(0, 10):
+    print(str(a[i])+ " ",  end='')
+print()
+
+b = [i for i in a  if i>5]
+print( b)
+
+a = [1,2,3,4]
+b = [17,12,11,10]
+c = [-1,-4,5,9]
+
+print("map 1-----------")
+for i in   map(lambda x,y:x+y, a,b):
+    print(i)
+
+print("map 2----------")
+for i in   map(lambda x,y,z:x+y+z, a,b,c):
+    print(i)
+
+
+print("map 3----------")
+for i in   map(lambda x,y,z:x+y-z, a,b,c):
+    print(i)
+    
+    
+예제 3-6) 재귀호출 - 함수가 자기 자신을 호출할때 사용한다 
+
+def fact(a):
+	print(a)
+	if a==1 :
+		return 1
+	return a* fact(a-1)
+
+print(fact(5))
+
+
+>>> def hanoi(ndisks, startPeg=1, endPeg=3):
+...     if ndisks:
+...             hanoi(ndisks-1, startPeg, 6-startPeg-endPeg)
+...             print(startPeg, "번 기둥의 ", ndisks, "번 원반을", endPeg, "번  기둥에 옮깁니다")
+...             hanoi(ndisks-1, 6-startPeg-endPeg, endPeg)
+...
+>>> hanoi(ndisks=3)
+1 번 기둥의  1 번 원반을 3 번 기둥에 옮깁니다
+1 번 기둥의  2 번 원반을 2 번 기둥에 옮깁니다
+3 번 기둥의  1 번 원반을 2 번 기둥에 옮깁니다
+1 번 기둥의  3 번 원반을 3 번 기둥에 옮깁니다
+2 번 기둥의  1 번 원반을 1 번 기둥에 옮깁니다
+2 번 기둥의  2 번 원반을 3 번 기둥에 옮깁니다
+1 번 기둥의  1 번 원반을 3 번 기둥에 옮깁니다
+>>>
+
+
+
+예제 3-7)이터레이터 (반복자) 
+
+a=[1,2,3,4,5]
+it = iter(a)
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it))
+
+
+예제 3-8)제너레이터 : 이터레이터를 만드는 도구 
+ 함수내에서 return 을 쓰지 않고 yield 를 쓴다. 
+ yield 를 쓰면 함수를 종료하지 않고 현 시점의 값을 전달한다 
+ 스택에 현 상태의 값을 전달한다 
+
+def reverse(data):
+    for index in range(len(data)-1, -1, -1):
+        yield data[index]
+
+for char in reverse('golf'): print(char)
+
+a = reverse('python')
+it = iter(a)
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it))
+
+
+def sigma(limit) :
+    for i in range(1, limit+1) :
+        yield i
+        
+b = iter(sigma(5))
+print(next(b))
+print(next(b))
+print(next(b))
+print(next(b))
+print(next(b))
+print(next(b))
+
+
+def abc(data):
+	for char in data:
+		yield char
+t = iter(abc("korea"))
+print(next(t))
+print(next(t))
+print(next(t))
+print(next(t))
+print(next(t))
+
+
+예제 3-9) 이뉴머레이터 : 인덱스와 요소를 다 반환 
+a = ["사과", "배", "포도", "토마토"]
+for i, fruit in enumerate(a) : print( i, fruit)
+
+
+################################
+         배열 
+###############################
+
+예제 4-1) Array 연습
+#-*- coding: utf-8 -*-
+#1차원배열
+
+a = [1,2,3,4,5,6,7,8,9,10]
+b = [None]*10
+
+for i in range(0, len(a)):
+    b[i] = a[i]
+
+print(b) 
+   
+#2차원 배열 
+a = [[1,2,3], [4,5,6], [7,8,9]]
+b = [[None]*3]*3       ## 문제 생김 
+
+print("########################")
+for i in range(0, len(a)):
+    for j in range(0, len(a[i])):
+        b[i][j] = a[i][j]
+        print(b[i][j], a[i][j])
+
+print(b)
+
+print("########################")
+b = []
+for i in range(3):
+    b.append( [None]*3)
+  
+for i in range(0, len(a)):
+    for j in range(0, len(a[i])):
+        b[i][j] = a[i][j] 
+b[0][0]=10
+print(a)
+print(b)
+
+
+
+################################
+			클래스 
+################################
+
+pass
+함수및 클래스의 메서드에서 아무것도 하지 않는다 (dummy역할  c에서 그냥 ; 역할이다) 
+
+
+help명령어
+>>> help(sum)
+Help on built-in function sum in module builtins:
+
+sum(...)
+    sum(iterable[, start]) -> value
+    
+    Return the sum of an iterable of numbers (NOT strings) plus the value
+    of parameter 'start' (which defaults to 0).  When the iterable is
+    empty, return start.
+
+>>> help(print)
+Help on built-in function print in module builtins:
+
+print(...)
+    print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+    
+    Prints the values to a stream, or to sys.stdout by default.
+    Optional keyword arguments:
+    file:  a file-like object (stream); defaults to the current sys.stdout.
+    sep:   string inserted between values, default a space.
+    end:   string appended after the last value, default a newline.
+    flush: whether to forcibly flush the stream.
+
+>>> 
+
+
+예제 5-1)클래스 만들기 
+ class  MyClass:
+	name = "홍길동"      #변수 선언과 동시에 값 할당하기 
+	age = 23           
+	def Print(self):   #self 를 통해서 객체 멤버를 접근한다 self 를 사용안하면 함수내에서 임의로 변수를 만들어서 
+	                   #지역변수로 사용한다 
+		print("{0} 의 나이는 {1} 입니다".format(self.name, self.age))
+
+		
+>>> p1 = Person()
+Traceback (most recent call last):
+  File "<pyshell#228>", line 1, in <module>
+    p1 = Person()
+NameError: name 'Person' is not defined
+>>> p1 = MyClass()
+>>> p1.Print()
+홍길동 의 나이는 23 입니다
+
+
+
+class MyClass:
+    name ="홍길동"
+    def output(self):
+        print(self.name)
+
+print(MyClass.name)#특이한 구조임 , 메서드 호출은 불가능
+#print(MyClass.output())  # missing 1 required positional argument: 'self'
+print(dir())
+
+
+p = MyClass()
+p.output()          #바운드메서드 호출
+MyClass.output(p)   #언바운드 메서드 호출
+
+
+#인스턴스 객체에 변수 추가 가능 
+p.age = 13
+print(p.age)
+
+#클래스에 변수 추가 
+MyClass.title="제목 어쩌구"
+print(MyClass.title)
+
+print(dir())
+
+print(p.title)
+
+
+str = "Not member class"
+class String:
+    str=""
+    def Set(self, msg):
+        self.str = msg
+    def Pring(self):
+        print(self.str)   #self 안썼음 
+        
+s = String()
+s.Set("member class")
+s.Pring()
+        
+p.__class__.name = "김기정"
+print(MyClass.name)
+
+p2 = MyClass()
+p2.output()
+
+print(isinstance(p, MyClass))
+
+예제 5-2)새로운 클래스 만들기 
+class Person:
+    name ="홍길동"
+    address = "서울시"
+    job="사장"
+    
+    def SetName(self, name):
+        self.name = name 
+    def SetAddress(self, address):
+        self.address = address
+    def SetJob(self, job):
+        self.job = job
+    def GetName(self):
+        return self.name
+    def GetAddress(self):
+        return self.address
+    def GetJob(self):
+        return self.job
+    
+    #생성자 : 언제나 __init__ 하나만 만들수 있다 
+    #def __init__(self, name):
+    #self.name=name
+    #객체의 기본 생성 불가  아래처럼 수정을 해야 한다      
+            
+    #def __init__(self, name=None):
+    #    if( name != None):
+    #        self.name=name
+        
+    def __init__(self, *args):
+        if(len(args)==1):
+                self.name=args[0]
+                
+
+    
+    def output(self):
+        print("이름  {0} 주소  {1}, 직업  {2}".format(self.name, self.address, self.job))
+       
+    def __del__(self):
+        print("호멸자") 
+        
+man1 = Person()
+man1.output()
+man2 = Person("이정현")
+man2.output()
+        
+예제 5-3)#static 메서드 선언
+
+class TestClass:
+    #__ 가 있는 메서드들은 외부에서 접근시, 클래스명으로 접근 불가  TestClass.__insCount 에거 발생
+    __insCount=0
+    insCount=0
+    
+    def __init__(self):
+        TestClass.__insCount+=1
+        
+        
+    #정적 메서드 정의 
+    def staticPrintCount():
+        print("Instance Count:%d " % TestClass.__insCount)
+    SPrintCount = staticmethod(staticPrintCount)
+    #에러 나는 거 무시하자 
+    
+    #클래스 메서드 정의 
+    def clsPrintCount(cls):
+        print("Instance Count:%d " % cls.__insCount)
+    ClsPrintCount = classmethod(clsPrintCount)
+    
+t = TestClass()
+t.__insCount=12
+print(t.__insCount)
+
+
+#print(TestClass.__insCount)
+print(TestClass.insCount)
+t.__class__.__insCount=12
+
+a, b, c = TestClass(), TestClass(), TestClass()
+
+TestClass.staticPrintCount()
+TestClass.ClsPrintCount()
+
+예제 5-4)#연산자 중복
+class MyString:
+    def __init__ (self, init=None):
+        self.content = init
+    def __sub__(self, str):
+        for i in str:
+            self.content = self.content.replace(i, '')
+        return MyString(self.content)
+    
+    def Remove(self, str):
+        return self.__sub__(str)
+     
+           
+m1 = MyString("Queen yuna is korean figure skater")
+m1 = m1 - "e"
+print(m1.content)
+ 
+예제 5-5) 행열 클래스 만들어보기 
+class MyMatrix:
+  
+    def __init__(self, mat1=None):
+        if mat1==None :
+            self.mat1 = [[1,2,3],[4,5,6], [7,8,9]]
+        else:
+            self.mat1 = mat1 
+        
+    def output(self):
+        #print(len(self.mat1))
+        
+        for i in range(0, len(self.mat1)):
+            for j in range(0, len(self.mat1[i])):
+                print("{0} ".format(self.mat1[i][j]), end='')
+            print()
+                
+            
+    def __add__(self, other):
+        resultMat=list(list())
+         
+        for i in range(0, len(self.mat1)):
+            l = list()
+            for j in range(0, len(self.mat1[i])):
+                l.append( self.mat1[i][j] + other.mat1[i][j])
+            resultMat.append(l)
+        return MyMatrix(resultMat)
+             
+       # print(self.mat1[0][0])
+       # print(self.mat1[0][1])
+       # print(self.mat1[0][2])
+      #  print(self.mat1[1][0])
+      #  print(self.mat1[1][1])
+      #  print(self.mat1[1][2])
+      #  print(self.mat1[2][0])
+      #  print(self.mat1[2][1])
+      #    print(self.mat1[2][2])
+          
+m1 = MyMatrix()
+m2 = MyMatrix()
+m1.output()
+m2.output()
+
+
+m1 = MyMatrix( [[1,0,0], [0,0,1]] )
+m2 = MyMatrix( [[10,20,30], [40, 50, 60]])
+#m2.output()
+
+m3 = m1 + m2 
+m3.output()
+
+  
+m1 = [[10,20,30], [40, 50, 60]]
+print(m1)
+
+print(len(m1))
+    
+    
+
+예제 5-6) 주소록 관리 프로그램 
+#-*- coding: utf-8 -*-
+
+class AddressBookData: 
+    name="홍길동"
+    phoneNumber="010-0000-0000"
+    address="서울시 관악구"
+    email = "ddd@han.com"
+    
+    #생성자 
+    def __init__(self, **data):
+        if( data!=None):
+            self.name = data["name"]
+            self.address= data["address"]
+            self.email= data["email"]
+            self.phoneNumber=data["phoneNumber"]
+        
+    
+    def setName(self, name):
+        self.name = name
+    
+    def setPhoneNumber(self, phoneNumber):
+        self.phoneNumber = phoneNumber
+    
+    def setAddress(self, address):
+        self.address = address
+    
+    def setEmail(self, email):
+        self.email = email 
+        
+    def getName(self):
+        return self.name 
+    
+    def getPhoneNumber(self):
+        return self.phoneNumber
+    
+    def getAddress(self):
+        return self.address
+    
+    def getEmail(self):
+        return self.email
+    
+    def output(self):
+        print(self.name + "   " + self.getPhoneNumber() + "  " + self.getEmail() + "  " + self.address)
+    
+    
+class AddressBook:
+    bookList = list
+    def __init__(self):
+        self.bookList =[AddressBookData(name="이정민", address="서울시 1", phoneNumber="010-1111-1111", email="dddd@hhh.com"),
+                        AddressBookData(name="김경수", address="서울시 2", phoneNumber="010-1111-1111", email="dddd@hhh.com"),
+                        AddressBookData(name="홍종학", address="서울시 3", phoneNumber="010-1111-1111", email="dddd@hhh.com"),
+                        AddressBookData(name="이학영", address="서울시 4", phoneNumber="010-1111-1111", email="dddd@hhh.com"),
+                        AddressBookData(name="유기홍", address="서울시 5", phoneNumber="010-1111-1111", email="dddd@hhh.com")]
+        
+    def append(self):
+        a = AddressBookData(name="김", email="ddd@ddd.com", address="관악구", phoneNumber="010-0000-2222")
+        self.bookList.append(a)
+        
+    def search(self, key):
+        pass
+        
+        
+    def output(self):
+        for item in self.bookList:
+           item.output()
+           
+    def sort(self):
+        b = sorted(self.bookList, key=mysort)
+        for item in b:
+            item.output()
+            
+#꼭 클래스 밖에 두자 --
+def mysort(data):
+    return data.name       
+                    
+book = AddressBook()
+book.append()
+book.output()
+
+book.sort()
+ 
+
+
+
+예제 5-7)상속
+#-*- coding: utf-8 -*-
+
+class Person:
+    def __init__(self, name, phoneNumber):
+        self.name = name
+        self.phoneNumber = phoneNumber
+    
+    def PrintInfo(self):
+        print("Info(Name:{0} phoneNumber:{1})".format(self.name, self.phoneNumber))
+        
+        
+    def PrintPersonData(self):
+        print("---------------------------------------------")
+        print("Info(Name:{0} phoneNumber:{1})".format(self.name, self.phoneNumber))
+        print("---------------------------------------------")
+ 
+ 
+class Student(Person): #상속받기
+        def __init__(self, name, phoneNumber, subject, studentID):
+            #self.name  = name 
+            #self.phoneNumber = phoneNumber
+            #부모 생성자 호출 
+            Person.__init__(self, name, phoneNumber)
+            self.subject = subject
+            self.studentID=studentID
+
+        #메서드 재정의 이름만 같으면 된다. 
+        def PrintPersonData(self):
+            print("---------------------------------------------")
+            print("Info(Name:{0} phoneNumber:{1} subject:{2} studentID:{3})".format(self.name, self.phoneNumber, 
+                  self.subject, self.studentID))
+            print("---------------------------------------------")
+ 
+s1 = Student("김영선", "010-0000-0000", "컴퓨터", "1111")
+s1.PrintInfo()
+s1.PrintPersonData()
+print( issubclass(Student, Person))
+print( issubclass(Student, object))  #파이선 3 부터 
+
+print(Student.__base__)
+print(Person.__base__)
+print(Student.__bases__)
+
+class Animal:
+    def __init__(self):
+        print("Animal __init__")
+        
+class Tiger(Animal):
+    def __init__(self):
+        super().__init__()
+        print("Tiger__init__")
+    def Jump(self):
+        print("호랑이처럼 멀리 점프하기")
+    def Cry(self):
+        print("호랑이 : 어흥~")
+
+
+class Lion(Animal):
+    def __init__(self):
+        super().__init__()
+        print("Lion__init__")
+        
+    def Bite(self):
+        print("사자처럼 한입에 꿀꺽하기")
+    def Cry(self):
+        print("사자:으르렁")
+        
+class Liger(Lion, Tiger):
+    def __init__(self):
+        super().__init__()
+       
+        print("Liger __init __")
+    def Play(self):
+        print("라이거만의 사육사와  재미있게 놀기")
+        
+        
+        
+liger = Liger()
+
+liger.Bite()
+liger.Cry()
+liger.Jump()
+
+############################
+	파일 
+############################
+
+예제 6-1)파일 읽고 쓰기 
+#-*- coding: utf-8 -*-
+import sys      #file 입출력 전담 모듈
+import pickle
+
+#file open 
+#file write
+#file close
+def fileWrite1():
+    f = open("test.txt", "w")
+    print("file write", file=f)   #eclipse 가 예민함 
+    f.close()
+
+def fileWrite2():
+    f=open("test2.txt", "w")
+    print("동해물과 백두산이 마르고 닳도록", file=f)
+    print("하느님이 보우하사 우리 나라만세", file=f)
+    print("무궁화 삼천리 화려강산", file=f)
+    print("대한사람 대한으로 길이 보전하세", file=f)
+    f.close()
+
+def fileRead1():
+    f = open("test2.txt", "r")
+    a = f.readline()  #첫번째 라인을 읽는다 
+    while a!="":
+        print(a, end='')
+        a = f.readline()  #다음 라인을 읽는다 더이상 읽을 데이타가 없으면 ""이 온다 
+
+    f.close()
+
+def fileRead2():
+    f = open("test2.txt", "r")
+    a = f.readlines()   #리스트로 한꺼번에 쭉 읽기 
+    for line in a:
+        print(line, end='') 
+    
+    f.close()
+
+def fileRead3():
+    f = open("test2.txt", "r")
+    a = f.read();  #파일 전체를 읽는다 
+    print(a)
+    
+    f.close()
+
+
+fileWrite2();
+print("----- 첫번째 파일 읽기 함수 호출 -----")
+fileRead1()
+print("----- 두번째 파일 읽기 함수 호출 -----")
+fileRead2()
+print("----- 세번째 파일 읽기 함수 호출 -----")
+fileRead3()
+
+
+에제 6-2)사용자 정의 클래스를 list 객체에 담아 파일에 저장하기와 읽기(객체 읽기와 쓰기)
+#-*- coding: utf-8 -*-
+import sys      #file 입출력 전담 모듈
+import pickle
+
+class MyClass:
+    def __init__(self, name, phone): #생성자 
+        self.name = name
+        self.phone = phone
+    def output(self):
+        print(self.name +  "  " + self.phone)
+
+
+mylist = [ MyClass("홍길동", "011-0000-0000"), 
+           MyClass("임꺽정", "010-1111-1111"),
+           MyClass("장길산", "010-9999-9999")]
+
+f = open("data.bin", "wb")  #binary mode write
+pickle.dump(mylist, f)
+f.close()
+
+
+f = open("data.bin", "rb") #binary mode read
+mylist2 = pickle.load(f)
+f.close()
+
+
+for item in mylist2:
+    item.output()
+
+
+예제 6-3) 예외처리테스트
+#-*- coding: utf-8 -*-
+try:
+    a = [1,2,3]
+    print(a[3])
+except:
+    print('Exception is occured')
+    
+    
+def devide(a,b):
+    return a/b
+
+try:
+    c = devide(5, 2)
+except ZeroDivisionError:
+    print("0")
+except TypeError:
+    print('type error')
+except:
+    print('error')
+else: 
+    print(c)
+finally:
+    print("always")
+
+
+################################
+		모듈 공유하기 
+################################
+c/C++과 공유하기
+비주얼 스튜디오
+프로젝트명 : spam , empty-project, dll 만들기 선택
+파일명 : spam.cpp
+
+/* c/C++ library*/
+#pragma comment(lib,"python34.lib") 
+#include <python.h>
+
+static PyObject*  spam_strlen(PyObject *self, PyObject *args)
+{
+	//self - 
+    char *str;
+    int len;
+
+	//PyArg_ParseTuple -- 파이썬에서 전달된 자료를 C 데이타 타입으로 전환한다 
+    if( !PyArg_ParseTuple(args, "s", &str))
+        return NULL;
+
+    len = strlen(str);
+    return Py_BuildValue("i", len);
+
+	//Py_BuildValue --C 의 자료형을 파이썬 형태로 전환한다 
+}
+
+static PyObject* spam_sigma(PyObject *self, PyObject *args)
+{
+    int limit;
+	int i=0;
+	int sum=0;
+
+    if( !PyArg_ParseTuple(args, "i", &limit))
+        return NULL;
+
+    
+	for(i=1; i<=limit; i++)
+		sum+=i;
+
+    return Py_BuildValue("i", sum);
+}
+
+
+/*
+	1.모듈을 찾는다
+	2.모듈을 초기화한다
+	3.지역이름공간에 이름을 정의한다 
+*/
+
+
+
+static  PyMethodDef SpamMethods[]={
+    {"strlen", spam_strlen, METH_VARARGS,   //strlen - 노출이름, spam_strlen -실제 이름 
+    "count s string length."},
+	{"sigma", spam_sigma, METH_VARARGS,  "1~n sum"},
+    {NULL, NULL, 0, NULL} /* end of array */
+};
+
+
+static struct PyModuleDef spammodule= {
+    PyModuleDef_HEAD_INIT,
+    "spam", //module name
+    "It is test module", /*module description __doc__ 에 저장됨*/
+    -1, SpamMethods
+};
+
+PyMODINIT_FUNC
+PyInit_spam(void)
+{
+	return PyModule_Create(&spammodule);
+}
+
+환경설정                      
+반드시 release 모드에서 
+ 프로젝트 - property - 일반 - 추가(Add~)  c:\Python34\include
+                           - 링커 - 일반 - 추가 - c:\python34\libs
+							             - 입력(input) - 추가종속성  python34.lib
+							  - 명령줄 - 추가옵션에   /export:PyInit_spam 기술 
+                              - 링커 - 일반 - $(Outdir)/spam.pyd 로 파일명 변경하기 
+			spam.pyd 파일 파이썬 설치 디렉토리/Lib에 복사 붙여넣기 
+
+			import spam
+			spam.strlen("hello")
+			spam.sigma(100)
+
+#설치 모듈들
+pip install numpy
+pip install scipy
+pip install pandas
+pip install matplotlib
+pip install openpyxl 
+
+##########################
+		XML 파싱 
+##########################
+
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <country name="Liechtenstein">
+        <rank>1</rank>
+        <year>2008</year>
+        <gdppc>141100</gdppc>
+        <neighbor name="Austria" direction="E"/>
+        <neighbor name="Switzerland" direction="W"/>
+    </country>
+    <country name="Singapore">
+        <rank>4</rank>
+        <year>2011</year>
+        <gdppc>59900</gdppc>
+        <neighbor name="Malaysia" direction="N"/>
+    </country>
+    <country name="Panama">
+        <rank>68</rank>
+        <year>2011</year>
+        <gdppc>13600</gdppc>
+        <neighbor name="Costa Rica" direction="W"/>
+        <neighbor name="Colombia" direction="E"/>
+    </country>
+</data>
+
+import xml.etree.ElementTree
+from numpy import rank
+ 
+tree = xml.etree.ElementTree   
+doc = tree.parse("data.xml")
+ 
+# get root node
+root = doc.getroot()
+
+for element in root.findall("country"):
+    print( element.findtext("rank"))
+    print( element.findtext("year"))
+    
+
+class  MyClass:
+    country=""
+    rank=""
+    year=""
+    gdppc=""
+    neighbor1=""
+    neighbor2=""
+    def output(self):
+        print(self.country, ' ', self.rank, ' ', self.year, ' ', self.gdppc, self.neighbor1, self.neighbor2)
+        
+
+myClassList =[]
+for element in root.findall("country"):
+    m = MyClass()
+    m.country= element.attrib["name"]
+    m.rank=element.findtext("rank")
+    m.year= element.findtext("year")
+    m.gdppc = element.findtext("gdppc")
+    name = element.findall('neighbor')
+    print(name, type(name))
+    m.neighbor1 = element.findall('neighbor')[0].attrib['name']
+    if( len(name) >1):
+        m.neighbor2 = element.findall('neighbor')[1].attrib['name']
+    else:
+         m.neighbor2 =""
+
+    myClassList.append(m)
+    
+for item in myClassList:
+    item.output()
+
+
+##########################
+	json 파싱
+##########################
+
+예제 1)json 파싱 예제 1
+#-*- coding: utf-8 -*-
+import json
+ 
+# 테스트용 Python Dictionary
+customer = {
+    'id': 152352,
+    'name': '홍길동',
+    'history': [
+        {'date': '2015-03-11', 'item': 'iPhone'},
+        {'date': '2016-02-23', 'item': 'Monitor'},
+    ]
+}
+ 
+# JSON 인코딩
+jsonString = json.dumps(customer)
+ 
+# 문자열 출력
+print(jsonString)
+print(type(jsonString))   # class str
+
+# JSON 디코딩
+dict = json.loads(jsonString)
+ 
+# Dictionary 데이타 체크
+print(dict['name'])
+for h in dict['history']:
+    print(h['date'], h['item'])
+    
+예제 1)json 파싱 예제 2  파일 사용하기     
+별도의 파일로 작성할 경우 json 파일의 항목에 '(어포스트로피)가 아니고 "(더블 쿼터)를 사용해야 합니다
+
+파일명 : test.json
+{
+	"product":"냉장고",
+    "person":[
+    	{"name":"홍길동", "age":"20", "address":"서울"},
+    	{"name":"장길산", "age":"21", "address":"광주"},
+    	{"name":"임꺽정", "age":"22", "address":"부산"}
+    ]  
+}
+
+
+#-*- coding: utf-8 -*-
+import json
+ 
+def readData(filename) :
+    f = open(filename, 'r', encoding='utf-8')
+    a = f.read()
+    #print(a)
+    js = json.loads(a)
+    f.close()
+    return js
+ 
+
+result = readData("./test.json")
+
+print(result['product'])
+
+for item in result['person']:
+   print (item['name'] + " " + item['age'] + " " + item['address']);
+
+
+
+##########################
+		Excel
+##########################
+
+예제)Excel 파일 읽고 쓰기(반드시 엑셀이 설치되어 있어야 한다) - anaconda64에서 안됩니다
+#-*- coding: utf-8 -*-
+"""
+from win32com.client import Dispatch
+excel = Dispatch("Excel.Application")
+wb = excel.Workbooks.Open("c:/Temp/Book1.xlsx")
+sh = wb.Sheets[0]
+sh.Cells(2,1).Value = 'pywin32'
+
+print( wb.name, sh.name, sh.cells(1,2).value)
+
+wb.save
+wb.close
+excel.Application.Quit()
+del excel
+"""
+"""
+import win32com
+import win32com.client as win32
+excel = win32.gencache.EnsureDispatch('Excel.Application')
+wb = excel.Workbooks.Add()
+ws = wb.Worksheets.Add()
+ws.Name = "MyNewSheet"
+ws.Cells(1,1).Value="엑셀"
+
+
+wb.SaveAs("D:\\test.xlsx", win32com.client.constants.xlWorkbookNormal, \
+    None, None, False, False, win32com.client.constants.xlNoChange, \
+    win32com.client.constants.xlLocalSessionChanges)
+
+excel.DisplayAlerts = True
+
+excel.Application.Quit()
+del excel
+"""
+
+
+예제) openxl 라이브러리 사용하기 
+#-*- coding: utf-8 -*-
+from openpyxl import Workbook
+wb = Workbook()
+print('workbook 생성')
+# grab the active worksheet
+ws = wb.active
+
+# Data can be assigned directly to cells
+ws['A1'] = 42
+
+# Rows can also be appended
+ws.append([1, 2, 3])
+
+# Python types will automatically be converted
+
+ws['A2'] = "ddd"
+
+ws['A3'] ='1~10까지'
+for i in range(1,11):
+    ws['A{0}'.format(i+4)]=i
+
+wb.save("sample.xlsx")
+
+예제) openxl 라이브러리 내용 읽기
+
+
+
+
+##########################
+		matplotlib
+##########################
+
+
+Numpy
+Python 언어에서 기본으로 지원하지 않는 array (배열) 혹은 matrix (행렬) 의 계산을 쉽게 할 수 있다.
+기계학습에서 많이 사용되는 해석학 및 선형대수학에 관련된 수식들을 Python 위에서 쉽게 프로그래밍 할 수 있다.
+
+Scipy
+Python의 라이브러리임과 동시에 계산과학을 위한 시스템을 총칭. 
+Numpy, Matplotlib (그래프를 그리는 데에 주로 사용됨) 외에도 IPython (Web에서 작동하는 Python의 인터랙티브 쉘) 
+및 Pandas (데이터 저장 및 분석을 위한 라이브러리)  패키지들로 이루어져 있음.
+
+예제 1)numpy 사용 에
+#-*- coding: utf-8 -*-
+import numpy as np
+data = np.random.randn(2, 3) #random  2by 3  
+print(data)
+print(type(data))
+
+data = data * 10  #for 문 필요 없음 
+print(data)
+
+data = data + data
+print(data)
+
+print(data.shape)
+print(data.dtype)
+
+
+예제 2) Numpy의 배열 
+#-*- coding: utf-8 -*-
+import numpy as np  #numpy 라이브러리를 np라는 이름으로 반입(import) 시킨다. 
+a = np.array([1, 2, 3]) # 랭크가 1인 배열을 생성한다 
+print(type(a)) # a의 타입,"<type 'numpy.ndarray'>" 를 표시한다. 
+print(a.shape) # a의 모양shape인 "(3,)" 을 표시한다. 
+print(a[0], a[1], a[2]) # []로 각 인덱스 요소에 접근할 수 있다. "1 2 3" 이 표시된다. 
+a[0] = 5 # 인덱싱으로 새로운 값을 할당할 수 있다. 
+print (a) # Prints "[5, 2, 3]" 
+b = np.array([[1,2,3],[4,5,6]]) # 리스트들을 통해 rank 2인 배열을 만든다. 
+print (b.shape) # b의 모양은 "(2, 3)" 이 되며, 2행 3열이라 보면 된다. 
+print (b[0, 0], b[0, 1], b[1, 0]) # 배열은 튜플로서 인덱스 되고, (0,0), (0,1), (1,0) 의 인덱스를 찾아 "1 2 4" 를 표시한다.
+
+
+예제 3) Numpy의 배열 
+import numpy as np 
+a = np.zeros((2,2)) # 배열의 모든 값이, 0인 2 x 2 배열을 생성한다. 
+print( a )# Prints "[[ 0. 0.] # [ 0. 0.]]" 
+b = np.ones((1,2)) # 배열의 모든 값이 1인 1x 2 배열을 생성한다. 
+print( b) # Prints "[[ 1. 1.]]" 
+c = np.full((2,2), 7) # 배열의 모든 값이 상수(7)인 2 x 2 배열을 생성한다. 
+print (c)# Prints "[[ 7. 7.] # [ 7. 7.]]" 
+d = np.eye(2) # 2 x 2 단위 행렬과 같은 배열을 생성한다. 
+print (d) # Prints "[[ 1. 0.] # [ 0. 1.]]" 
+e = np.random.random((2,2)) # 난수로 채워진 2 x 2 행렬을 생성한다. 
+print( e )# Might print "[[ 0.91940167 0.08143941] # [ 0.68744134 0.87236687]]"
+
+
+예제 4)matplotlib를 이용한 차트 그리기1
+
+import matplotlib.pyplot as plt
+plt.plot([1,2,3,4])
+plt.ylabel('some numbers')
+plt.show()
+
+
+import matplotlib.pyplot as plt
+x = range(100)
+y = [ i*i for i in x]
+plt.plot(x,y)
+plt.show()
+
+
+예제 5)matplotlib를 이용한 차트 그리기2
+import numpy as np 
+import matplotlib.pyplot as plt # 사인곡선에 해당하는 x와 y 좌표를 계산하자
+x = np.arange(0, 10, 0.1)  #np.arrange(start, stop, step 
+y = np.sin(x) # matplotlib를 사용해 점들을 표시하자 
+plt.plot(x, y) 
+plt.show() # 그래픽 표현을 만들기 위해서는 plt.show() 함수를 꼭 불러줘야한다.
+
+
+예제 6)matplotlib를 이용한 차트 그리기3
+import numpy as np 
+import matplotlib.pyplot as plt # 사인과 코싸인 곡선에 해당하는 x, y 좌표를 꼐산하자 
+x = np.arange(0, 3 * np.pi, 0.1) 
+y_sin = np.sin(x) 
+y_cos = np.cos(x) # matplotlib를 이용해 점들을 나타내자.
+
+plt.plot(x, y_sin) 
+plt.plot(x, y_cos) 
+
+plt.xlabel('x axis label') 
+plt.ylabel('y axis label') 
+plt.title('Sine and Cosine') 
+plt.legend(['Sine', 'Cosine']) 
+plt.show()
+
+예제 7)matplotlib를 이용한 차트 그리기4(선형회귀)
+
+from scipy import stats, polyval
+from pylab import plot, title, show, legend 
+
+x  = [3.52, 2.58, 3.31, 4.07, 4.62, 3.98, 4.29, 4.83, 3.71, 4.61, 3.90, 3.20]
+y = [2.48, 2.27, 2.47, 2.77, 2.98, 3.05, 3.18, 3.46, 3.03, 3.25, 2.67, 2.53]
+
+slope, intercept, r_value, p_value, stderr=stats.linregress(x,y)
+#기울기, 
+
+print(r_value)
+print(p_value)
+print(4*slope + intercept)
+ry = polyval([slope, intercept], x)
+print(ry)
+plot(x, y, 'k.')
+plot(x, y, 'r.-')
+title('regression result')
+legend(['original', 'regression'])
+show()
+
+
+예제 8)matplotlib를 이용한 차트 그리기5
+import numpy as np
+import matplotlib.pyplot as plt
+
+X = np.linspace(-np.pi, np.pi, 256, endpoint=True)
+C,S = np.cos(X), np.sin(X)
+
+plt.plot(X,C)
+plt.plot(X,S)
+
+plt.show()
+"""
+
+"""
+http://www.labri.fr/perso/nrougier/teaching/matplotlib/
+"""
+
+예제 9)matplotlib를 이용한 차트 그리기5
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure()
+ax = Axes3D(fig)
+X = np.arange(-4, 4, 0.25)
+Y = np.arange(-4, 4, 0.25)
+X, Y = np.meshgrid(X, Y)    #x 하고 y를 -4부터 4까지 0.25 간격으로 나눈다
+R = np.sqrt(X**2 + Y**2)
+Z = np.sin(R)
+
+ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='hot')
+
+plt.show()
+
+예제 10)matplotlib를 이용한 차트 그리기9
+
+from pylab import *
+
+x = linspace(-1.6, 1.6, 3000)  #-1.6 부터 1.6까지 3000 등분 나눈 vector 생성 
+f = lambda x: (sqrt(cos(x)) * cos(200 * x) + sqrt(abs(x)) - 0.7) * pow((4 - x * x), 0.01)
+plot(x, list(map(f, x)))
+show()
+
+예제 11) 엑셀 파일 불러와서 차트 작성하기 
+#-*- coding: utf-8 -*-
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+
+#엑셀 파일 읽기 
+data = pd.read_excel("./sample.xlsx")
+print(data.head())  #첫번째 4줄 가져옴 
+
+#plt.plot(data)
+#plt.show()
+
+red_line = mlines.Line2D([], [], color='red', marker='',
+                          markersize=10, label='A')
+green_line = mlines.Line2D([], [], color='g', marker='o',
+                          markersize=10, label='B')
+blue_line = mlines.Line2D([], [], color='b', marker='o',
+                          markersize=10, label='C')
+plt.legend(handles=[red_line, green_line, blue_line])
+
+plt.plot(data.A, 'r')
+plt.plot(data.B, 'g')
+plt.plot(data.E, 'b')
+
+plt.xlabel('x 축')
+plt.ylabel('y 축')
+plt.show()
+
+#########################
+오라클 연결하기 
+#############################
+#-*- coding: utf-8 -*-
+import cx_Oracle
+
+con = cx_Oracle.connect('hr/1234@127.0.0.1:1521/xe')
+cur = con.cursor()
+
+#cur.execute("insert into test values (2, '홍길동')")
+
+
+#param 전달방식 
+sql = "insert into test values (:id, :name)"
+param = ('3', '김연아')
+cur.execute(sql, param)
+
+con.commit()
+
+cur.execute('select * from test')
+
+for result in cur:
+  print(result)
+  
+cur.close()
+con.close()
+
+
+파이썬 예제 
+참고사이트 : https://sacko.tistory.com/8?category=630829
+
+예제1)엑셀파일 읽기 
+# -*- coding:utf-8 -*-
+import openpyxl
+
+#http://www.index.go.kr/potal/main/EachDtlPageDetail.do?idx_cd=1041
+
+# 엑셀파일 열기
+filename = "stats_104102.xlsx"
+book = openpyxl.load_workbook(filename)
+
+# 맨 앞의 시트 추출하기
+sheet = book.worksheets[0]
+
+# 시트의 각 행을 순서대로 추출하기
+data = []
+for row in sheet.rows:
+	data.append([row[0].value, row[1].value, row[9].value])
+
+# 필요없는 줄(헤더, 연도, 계) 제거하기
+del data[0] #삭제시 한줄씩 달려옴 
+del data[0]
+del data[0]
+
+# 데이터를 인구 순서로 정렬합니다.
+data = sorted(data, key=lambda x:x[2])
+
+# 하위 5위를 출력합니다.
+for i, a in enumerate(data):
+	if (i >= 100): break
+	print(i+1, a[0], int(a[1]), int(a[2]))
+
+
+예제2)엑셀파일 저장
+# -*- coding:utf-8 -*-
+import openpyxl
+
+# 엑셀파일 열기
+filename = "stats_104102.xlsx"
+book = openpyxl.load_workbook(filename)
+
+# 활성화된 시트 추출하기
+sheet = book.active
+
+# 서울을 제외한 인구를 구해서 쓰기
+for i in range(0, 9):
+	col = chr(i+66)
+	total = int(sheet[col + "3"].value)
+	seoul = int(sheet[col + "4"].value)
+	output = total - seoul
+	print("서울 제외 인구 = ", output)
+
+	# 쓰기
+	sheet[col + "21"] = output
+	cell = sheet[col + "21"]
+
+	# 폰트와 색상 변경해보기
+	cell.font = openpyxl.styles.Font(size=14, color="FF0000")
+	cell.number_format = '#,###,###'
+
+# 엑셀 파일 저장하기
+filename = "population.xlsx"
+book.save(filename)
+print("OK")
+
+
+numpy: Numpy는 C언어로 구현된 파이썬 라이브러리로써, 고성능의 수치계산을 위해 제작
+벡터나 행렬 연산에 유용하다 
+
+
+예제3)numpy 사용법
+
+a = [1,2,3]
+b = [4,5,6]
+c = a + b  #파이썬에서는 두개의 리스트를 확장하는걸로 인식한다. 
+
+#수학적으로 a와 b의 각 요소들의 합을 구하려고 할때 numpy 라이브러리를 활용한다 
+
+print(c)
+
+import numpy as np
+a1 = np.array(a)
+b1 = np.array(b)
+c1 = a1 + b1
+c2 = a1 * b1
+print(c1)
+print(c2)
+print(type(a1))
+print(c1[0])
+print(c1[1])
+print(c1[2])
+
+for item in c1:
+    print(item)
+
+
+#2차원 만들기 
+m1 = np.array([[1,2], [3,4]])
+m2 = np.array([[3,4], [4,5]])
+m3 = m1 + m2 
+print(m3)
+
+print(m1.shape) #행렬의 열과 행의 개수 정보
+print(m1.dtype) #저장된 데아터 타입 
+
+print( m1[0,0])
+print( m1[0,1])
+print( m1[1,0])
+print( m1[1,1])
+
+for i in range(0, 2):
+    for j in range(0, 2):
+        print(m1[i,j], ', ', end='')
+    print()
+
+
+예제 2) Numpy의 배열 
+#-*- coding: utf-8 -*-
+import numpy as np  #numpy 라이브러리를 np라는 이름으로 반입(import) 시킨다. 
+a = np.array([1, 2, 3]) # 랭크가 1인 배열을 생성한다 
+print(type(a)) # a의 타입,"<type 'numpy.ndarray'>" 를 표시한다. 
+print(a.shape) # a의 모양shape인 "(3,)" 을 표시한다. 
+print(a[0], a[1], a[2]) # []로 각 인덱스 요소에 접근할 수 있다. "1 2 3" 이 표시된다. 
+a[0] = 5 # 인덱싱으로 새로운 값을 할당할 수 있다. 
+print (a) # Prints "[5, 2, 3]" 
+b = np.array([[1,2,3],[4,5,6]]) # 리스트들을 통해 rank 2인 배열을 만든다. 
+print (b.shape) # b의 모양은 "(2, 3)" 이 되며, 2행 3열이라 보면 된다. 
+print (b[0, 0], b[0, 1], b[1, 0]) 
+# 배열은 튜플로서 인덱스 되고, (0,0), (0,1), (1,0) 의 인덱스를 찾아 "1 2 4" 를 표시한다.
+
+
+예제 3) Numpy의 배열 
+import numpy as np 
+a = np.zeros((2,2)) # 배열의 모든 값이, 0인 2 x 2 배열을 생성한다. 
+print( a )# Prints "[[ 0. 0.] # [ 0. 0.]]" 
+b = np.ones((1,2)) # 배열의 모든 값이 1인 1x 2 배열을 생성한다. 
+print( b) # Prints "[[ 1. 1.]]" 
+c = np.full((2,2), 7) # 배열의 모든 값이 상수(7)인 2 x 2 배열을 생성한다. 
+print (c)# Prints "[[ 7. 7.] # [ 7. 7.]]" 
+d = np.eye(2) # 2 x 2 단위 행렬과 같은 배열을 생성한다. 
+print (d) # Prints "[[ 1. 0.] # [ 0. 1.]]" 
+e = np.random.random((2,2)) # 난수로 채워진 2 x 2 행렬을 생성한다. 
+print( e )# Might print "[[ 0.91940167 0.08143941] # [ 0.68744134 0.87236687]]"
+
+예제 4)
+#-*- coding: utf-8 -*-
+import numpy as np
+data = np.random.randn(2, 3) #random 2 by 3
+print(data)
+print(type(data))
+
+data = data * 10  #for 문 필요 없음 
+print(data)
+
+data = data + data
+print(data)
+
+print(data.shape)
+print(data.dtype)
+
+
+예제5)
+#-*- coding: utf-8 -*-
+import numpy as np
+data1 = [6, 7.5, 8, 0, 1]
+array1 = np.array(data1)
+
+print(data1*3)  #배열의 갯수가 늘어난다 
+print(array1*3) #데이터 연산을 수행한다 
+
+data2 = [[1,2,3,4],[5,6,7,8]]
+array2 = np.array(data2)
+print(array2[0][0])
+
+array3 = np.array(data2)
+
+array4 = array2 * array3
+print(array4)
+
+a = np.zeros((3, 6))  # 6개의 0으로 구성된 리스트 3개 
+print(a)
+
+
+예제6) 
+#-*- coding: utf-8 -*-
+
+import numpy as np
+
+x = np.array([[1,2],[3,4]], dtype=np.float64)
+y = np.array([[5,6],[7,8]], dtype=np.float64)
+
+print (x + y)
+print (np.add(x, y))
+
+print (x - y)
+print (np.subtract(x, y))
+
+print (x * y)
+print (np.multiply(x, y))
+
+print (x / y)
+print (np.divide(x, y))
+
+print (np.sqrt(x))
+
+
+예제7)
+#-*- coding: utf-8 -*-
+import numpy as np
+
+m = [1,2,3,4,5]
+
+a = np.array(m)
+
+print(a[:])
+
+#print(a[0:])
+#print(a[1:])
+#print(a[2:])
+print(m[0:4])
+print(m[:4])
+
+print(a[2:4])
+
+print(a[:-1])
+
+
+k =  [[1,2,3,4,5],
+[6,7,8,9,10],
+[11,12,13,14,15],
+[16,17,18,19,20],
+[21,22,23,24,25],]
+
+a = np.array(k) #python 객체를 행객체로 전환한다 
+
+#print (a[:]) #전부 출력하기 
+
+"""
+print (a[:1])  #1행만
+print (a[:2])  #2행까지
+print (a[:3])  #3행까지
+
+
+print (a[::2])  #1행, 3행, 5행 ...
+print (a[::3])  #1행, 4행 , 7행...
+
+print(a[:2, :2])  #2, 2 개식 sliceing 한다 
+print(a[2:4, 3:5])  #2,3행 3,4열
+
+"""
+
+예제)차트그리기
+#-*- coding: utf-8 -*-
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 사인곡선에 해당하는 x와 y 좌표를 계산하자
+x = np.arange(0, 3 * np.pi, 0.1)
+y = np.sin(x)
+
+# matplotlib를 사용해 점들을 표시하자
+plt.plot(x, y)
+plt.show()  # 그래픽 표현을 만들기 위해서는 plt.show() 함수를 꼭 불러줘야한다.
+
+예제)차트그리기2
+#-*- coding: utf-8 -*-
+import numpy as np
+import matplotlib.pyplot as plt # 사인과 코싸인 곡선에 해당하는 x, y 좌표를 꼐산하자
+x = np.arange(0, 3 * np.pi, 0.1) 
+y_sin = np.sin(x) 
+y_cos = np.cos(x) # matplotlib를 이용해 점들을 나타내자. 
+plt.plot(x, y_sin) 
+plt.plot(x, y_cos) 
+plt.xlabel('x axis label') 
+plt.ylabel('y axis label') 
+plt.title('Sine and Cosine') 
+plt.legend(['Sine', 'Cosine']) 
+plt.show()
+
+예제)차트그리기3
+#-*- coding: utf-8 -*-
+import numpy as np 
+import matplotlib.pyplot as plt # Compute the x and y coordinates for points on sine and cosine curves 
+x = np.arange(0, 3 * np.pi, 0.1) 
+y_sin = np.sin(x) 
+y_cos = np.cos(x) # subplot의 모양이 높이는 2고 너비는 1로 설정하자. # 그리고 첫번째 subplot을 활성화한다. 
+
+plt.subplot(2, 1, 1) # 첫번째 plot을 만든다. 
+plt.plot(x, y_sin) 
+plt.title('Sine') # 두번째 plot을 활성화하고, 두번째 plot을 만든다. 
+
+plt.subplot(2, 1, 2) 
+plt.plot(x, y_cos) 
+plt.title('Cosine') # 그림을 나타낸다. 
+plt.show()
+
+
+
+
+
+
+
+
+pip install pandas
+pandas : pandas는 데이타 분석(Data Analysis)을 위해 널리 사용되는 파이썬 라이브러리 패키지임
+dataframe 이라는 타입을 제공한다. 이 타입은 마치 테이블처럼 사용이 가능하고, csv파일이나 xlsx형태의 데이터를 
+읽어서 dataframe 형태로 저장해놓고, 데이터 추가나 삭제 수정이 손쉽다. 
+R언어의 dataframe과 유사하나 사용방법은 R보다 힘들다 
+
+참고자료 : https://datascienceschool.net/view-notebook/c5ccddd6716042ee8be3e5436081778b/
+
+예제)pandas예제.py
+import pandas as pd
+
+#dataframe :  행들로 구성된 테이블 각각의 행은 Series 라고 한다. 쉽게 dataframe 은 테이블 구조이고 
+#각 행은 series 라고 한다 
+
+data = [1, 3, 5, 7, 9]
+s = pd.Series(data) #list 타입을 pandas의 Series 타입으로 전환한다  
+
+print(s)
+
+data = {
+				"Name":["John", "Anna", "Peter", "Linda"],
+        "Location":["New York", "Paris", "Berlin", "London"],
+        "Age":[24, 13, 53, 33]
+}
+
+data_pandas = pd.DataFrame(data)
+print(data_pandas)
+
+
+data = pd.DataFrame()
+
+
+예제)pandas예제2.py
+
+#-*- coding: utf-8 -*-
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+
+#엑셀 파일 읽기 
+data = pd.read_excel("./sample.xlsx")
+print(data.head())  #첫번째 4줄 가져옴 
+
+#plt.plot(data)
+#plt.show()
+
+red_line = mlines.Line2D([], [], color='red', marker='',
+                          markersize=10, label='A')
+green_line = mlines.Line2D([], [], color='g', marker='o',
+                          markersize=10, label='B')
+blue_line = mlines.Line2D([], [], color='b', marker='o',
+                          markersize=10, label='C')
+plt.legend(handles=[red_line, green_line, blue_line])
+
+plt.plot(data.A, 'r')
+plt.plot(data.B, 'g')
+plt.plot(data.E, 'b')
+
+plt.xlabel('x 축')
+plt.ylabel('y 축')
+plt.show()
+
+
+예제)판다스 
+import pandas as pd
+
+#dataframe :  행들로 구성된 테이블 각각의 행은 Series 라고 한다. 쉽게 dataframe 은 테이블 구조이고 
+#각 행은 series 라고 한다 
+#https://doorbw.tistory.com/172
+
+data = [1, 3, 5, 7, 9]
+s = pd.Series(data) #list 타입을 pandas의 Series 타입으로 전환한다  
+
+print(s)
+
+
+data = { 
+		"Name":["John", "Anna", "Peter", "Linda"],
+		"Location":["New York", "Paris", "Berlin", "London"],
+		"Age":[24, 13, 53, 33]
+}
+
+data_pandas = pd.DataFrame(data)
+print(data_pandas)
+
+#파일을 저장할 수 있다 - index=False 를 지정하지 않으면 자동 인덱스가 만들어진다. 
+data_pandas.to_csv('result.csv', index=False)
+
+#data = pd.read_csv('result.csv', index_col='Name') #인덱스를 지정할 수 도 있다 
+data = pd.read_csv('result.csv') 
+print(data)
+
+print(data.index)
+print(data.columns)
+print(data.values)
+print(data.describe())
+
+#특정 열만 추출하기 
+print(data[['Name', 'Age']])
+
+
+#새로 멤버 추가하기 
+data['penalty'] = 0.5
+print(data)
+
+
+
+# -*- coding: utf-8 -*-
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
+
+#series : 1차원 배열
+s = pd.Series([1,3,5,np.nan,6,8])
+#print(s)
+#pd.Series 에 다른 시리즈 더하기 - 자동으로 인덱스 부여하도록 
+s = s.append(pd.Series([10,11]), ignore_index=True)
+#print(s)
+s = s.append(pd.Series([9]), ignore_index=True)
+#print(s)
+
+#삭제 
+s = s.drop(2) #2번째 항목 삭제 
+print(s)
+
+print(s.index)
+print(s[0])
+print(s[1])
+s[2]=100
+print(s[2])
+print(s)
+
+column = ['name', 'age', 'phone', 'email']
+#데이터 프레임은 배열 형태여야 한다 - 컬럼을 먼저 추가하다 , Series 타입의 데이터를 추가할 경우에 ignore_index=True 반드시 
+data = pd.DataFrame(columns=column)
+data = data.append( {"name":"홍길동", "age":"23", 'phone':'010-0000-0000', 'email':'aaa@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"장길산", "age":"33", 'phone':'010-1111-1111', 'email':'bbb@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"임꺽정", "age":"42", 'phone':'010-2222-2222', 'email':'ccc@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"홍경래", "age":"21", 'phone':'010-3333-3333', 'email':'ddd@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"전봉준", "age":"37", 'phone':'010-4444-4444', 'email':'eee@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"유시민", "age":"38", 'phone':'010-5555-5555', 'email':'fff@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"유성룡", "age":"57", 'phone':'010-6666-6666', 'email':'ggg@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"최시형", "age":"47", 'phone':'010-7777-7777', 'email':'hhh@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"최치원", "age":"53", 'phone':'010-8888-8888', 'email':'iii@ccc.com'}, ignore_index=True  )
+data = data.append( {"name":"최충",   "age":"46", 'phone':'010-9999-9999', 'email':'jjj@ccc.com'}, ignore_index=True  )
+print(data)
+
+#전체 컬럼 보기 
+for i in data:
+    print(i)
+
+#인덱스, 각 행 - readonly 이다 
+for i, row in data.iterrows():
+    print(i, row['name'], row['age'])
+   
+print("data[:]") 
+print( data[:])#전부 출력
+
+print("data[::3]") #0번부터 3씩 건너뛰면서 나옴    
+print( data[::3]) #
+    
+print("data[:3]")  
+print( data[:3])  
+      
+print("data[1:3]")  
+print( data[1:3])  
+
+print("data[::2]")    
+print( data[::2]) #0부터 2씩 건너뛰면서 나옴 
+
+print("data[::-1]") #역순으로 
+print( data[::-1])
+
+#loc : 인덱스를 이용해 가능하다 
+print( "data.loc['1':'5']")
+print( data.loc['1':'5'])
+
+print(data.loc['1':'4', 'name':'email'])
+print( data.loc['1':'4', 'name':'email'])
+
+#데이터 체인지 
+print(data.loc[:'0', :'name'])
+data.loc['0':'0', 'name':'name']='김성훈'
+print(data.loc['0':'0', 'name':'name'])
+print(data)
+
+
+print(data.iloc[:3, :1])
+#3행 1열이다. 
+#컬럼의 위치값 
+
+print(data.iloc[3, 1])
+
+print(data.iloc[[1, 3, 5], [1, 3]])
+
+#dataframe 복사 
+data2 = data.copy()
+print(data2)
+
+data.loc['0':'0', 'name':'name']='김경미'
+#컬럼 
+
+data2 = pd.DataFrame(columns=column )
+print(data2)
+
+print("복사후")
+for i, row in data.iterrows():
+    data2 = data2.append(row)
+
+print(data2)
+#하나씩 복사하기 
+
+

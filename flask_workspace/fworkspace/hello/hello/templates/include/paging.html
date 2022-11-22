@@ -1,0 +1,33 @@
+<div style="text-align: center;">
+    <ul class="pagination justify-content-center">
+      <li class="page-item"><a class="page-link" href="?pageNum=1">First</a></li>
+      <li class="page-item {%if data.pageNum==1%} disabled{%endif%}">
+        <a class="page-link"
+            {%if data.pageNum >1 %} 
+            href="?pageNum={{data.pageNum-1}}"
+            {%endif%}
+        >
+        Previous</a>
+      </li>
+    
+      {% for i in range(data.pnStart, data.pnEnd) %}
+        {% if data.pageNum == i %}
+        <li class="page-item active"><a class="page-link" href="?pageNum={{i}}">{{i}}</a></li>
+        {%else%}
+        <li class="page-item "><a class="page-link" href="?pageNum={{i}}">{{i}}</a></li>
+        {%endif%}
+
+      {%endfor%} 
+      
+      <li class="page-item {%if data.pageNum==data.pnTotal%} disabled{%endif%}">
+        <a class="page-link"
+            {%if data.pageNum < data.pnTotal %} 
+            href="?pageNum={{data.pageNum+1}}"
+            {%endif%}
+        >
+        Next</a>
+      </li>
+
+      <li class="page-item"><a class="page-link" href="?pageNum={{data.pnTotal}}">Last</a></li>
+    </ul>
+</div>

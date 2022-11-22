@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome my home</h1>
+
+    {%if "userid" not in session %}
+        <a href="/logon">로그온</a> <!-- 로그온 페이지로 이동하기 -->
+    {%else%}
+        안녕하세요 {{session['username']}} 
+        <a href="/logout">로그아웃</a> 
+    {%endif%} 
+</body>
+</html>
+
